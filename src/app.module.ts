@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { BoardsModule } from './boards/boards.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
-import { ormConfig } from './orm.config';
+import { ormConfig } from './configs/typeorm.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRootAsync({ useFactory: ormConfig }), UserModule],
+  imports: [TypeOrmModule.forRoot(ormConfig()), BoardsModule, AuthModule],
 })
 export class AppModule {}
