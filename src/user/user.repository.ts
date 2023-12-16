@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/user-credential.dto';
 import {
@@ -6,9 +6,13 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { InjectRepository } from '@nestjs/typeorm';
 
-@EntityRepository(User)
 export class UserRepository extends Repository<User> {
+  constructor(@InjectRepository(User) private datasource: DataSource) {
+    super(User, datasource.manager);
+  }
+
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     const { username, password } = authCredentialsDto;
 

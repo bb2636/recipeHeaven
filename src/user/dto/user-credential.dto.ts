@@ -26,5 +26,5 @@ export class AuthCredentialsDto {
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  emmail: string;
+  email: string;
 }
