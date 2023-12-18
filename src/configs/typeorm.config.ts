@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
-import { Board } from 'src/boards/board.entity';
+// import { Board } from 'src/boards/board.entity';
+import { Recipe } from 'src/recipe/recipe.entity';
 
 // export const typeORMConfig: TypeOrmModuleOptions = {
 //   type: 'mysql',
@@ -23,14 +24,14 @@ function ormConfig(): TypeOrmModuleOptions {
 
   return {
     type: 'mysql',
-    database: 'board_app',
+    database: 'test',
     host: 'localhost',
     port: Number(3306),
     username: 'root',
-    password: 'qkseltqnfdl1',
+    password: 'bomi0306',
     logging: true,
     synchronize: commonConf.SYNCRONIZE,
-    entities: [Board, User],
+    entities: [Recipe, User],
     migrations: commonConf.MIGRATIONS,
     migrationsRun: commonConf.MIGRATIONS_RUN,
   };
