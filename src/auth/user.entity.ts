@@ -1,8 +1,12 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Recipe } from 'src/recipe/recipe.entity';
 import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -35,4 +39,8 @@ export class User extends BaseEntity {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @JoinColumn()
+  @ManyToMany(() => Recipe, (recipe) => recipe.user)
+  recipes: Recipe[];
 }
