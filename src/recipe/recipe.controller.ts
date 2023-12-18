@@ -24,12 +24,12 @@ export class RecipeController {
   createRecipe(@Body() createRecipeDto: CreateRecipeDto): Promise<Recipe> {
     return this.recipeService.createRecipe(createRecipeDto);
   }
-  @Get('/:id')
-  getRecipeById(@Param('id') id: number): Promise<Recipe> {
-    return this.recipeService.getRecipeById(id);
+  @Get('/:recipeId')
+  getRecipeById(@Param('recipeId') recipeId: number): Promise<Recipe> {
+    return this.recipeService.getRecipeById(recipeId);
   }
-  @Delete('/:id')
-  deleteRecipe(@Param('id', ParseIntPipe) id): Promise<void> {
-    return this.recipeService.deleteRecipe(id);
+  @Delete('/:recipeId')
+  deleteRecipe(@Param('recipeId', ParseIntPipe) recipeId): Promise<void> {
+    return this.recipeService.deleteRecipe(recipeId);
   }
 }

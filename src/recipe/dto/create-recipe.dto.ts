@@ -1,4 +1,4 @@
-import { IsString, MaxLength, MinLength, maxLength } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateRecipeDto {
   @IsString()
@@ -7,15 +7,13 @@ export class CreateRecipeDto {
   @IsString()
   img: string;
 
-  @MinLength(1)
-  @MaxLength(10)
+  @IsNumber()
   portion: number;
 
-  @MinLength(1)
+  @IsNumber()
   leadTime: number;
 
-  @MinLength(1)
-  @MaxLength(5)
+  @IsNumber()
   level: number;
 
   @IsString()
@@ -24,6 +22,6 @@ export class CreateRecipeDto {
   @IsString()
   ingredientUnit: string;
 
-  @MinLength(0)
+  @IsNumber()
   aveStar: number;
 }
