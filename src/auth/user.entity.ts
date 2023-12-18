@@ -1,3 +1,4 @@
+import { IsEmail, IsNotEmpty } from 'class-validator';
 import {
   BaseEntity,
   Column,
@@ -5,6 +6,10 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
+export enum UserRole {
+  ADMIN = 'admin',
+  User = 'user',
+}
 
 @Entity()
 @Unique(['username'])
@@ -16,5 +21,18 @@ export class User extends BaseEntity {
   username: string;
 
   @Column()
+  @IsNotEmpty()
   password: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.User,
+  })
+  role: UserRole;
+
+  @Column()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }
