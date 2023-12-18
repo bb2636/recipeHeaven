@@ -22,8 +22,7 @@ export class UserRepository extends Repository<User> {
     const user = this.create({ username, password: hashedPassword });
 
     try {
-      await this.save(user);
-      return user;
+      return await this.save(user);
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('Duplicate error');
