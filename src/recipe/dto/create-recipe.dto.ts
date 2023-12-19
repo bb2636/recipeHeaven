@@ -9,6 +9,17 @@ class IngredientDto {
   unit: string;
 }
 
+class stepDto {
+  @IsNumber()
+  stepNum: number;
+
+  @IsString()
+  des: string;
+
+  @IsString()
+  imgUrl: string;
+}
+
 export class CreateRecipeDto {
   @IsString()
   recipeName: string;
@@ -30,8 +41,10 @@ export class CreateRecipeDto {
   @Type(() => IngredientDto)
   ingredient: { item: string; unit: string }[];
 
-  // @IsArray()
-  // ingredientUnit: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => stepDto)
+  step: { stepNum: number; des: string; imgUrl: string }[];
 
   @IsNumber()
   aveStar: number;
