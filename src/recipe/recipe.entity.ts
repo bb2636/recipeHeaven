@@ -30,11 +30,11 @@ export class Recipe extends BaseEntity {
   @Column()
   level: number;
 
-  @Column()
-  ingredient: string; //배열
+  @Column('json')
+  ingredient: { item: string; unit: string }[]; //배열안에 객체 = [{item: apple, unit: 1개},{...}];
 
-  @Column()
-  ingredientUnit: string; //g, 개
+  // @Column()
+  // ingredientUnit: string; //g, 개
 
   @Column()
   aveStar: number;

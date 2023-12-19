@@ -1,4 +1,13 @@
-import { IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, IsString, ValidateNested } from 'class-validator';
+
+class IngredientDto {
+  @IsString()
+  item: string;
+
+  @IsString()
+  unit: string;
+}
 
 export class CreateRecipeDto {
   @IsString()
@@ -16,11 +25,13 @@ export class CreateRecipeDto {
   @IsNumber()
   level: number;
 
-  @IsString()
-  ingredient: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => IngredientDto)
+  ingredient: { item: string; unit: string }[];
 
-  @IsString()
-  ingredientUnit: string;
+  // @IsArray()
+  // ingredientUnit: string;
 
   @IsNumber()
   aveStar: number;

@@ -15,7 +15,7 @@ export class RecipeRepository extends Repository<Recipe> {
       leadTime,
       level,
       ingredient,
-      ingredientUnit,
+      //ingredientUnit,
       aveStar,
     } = createRecipeDto;
 
@@ -25,8 +25,8 @@ export class RecipeRepository extends Repository<Recipe> {
       portion,
       leadTime,
       level,
-      ingredient,
-      ingredientUnit,
+      ingredient: Array.isArray(ingredient) ? ingredient : [ingredient],
+      //ingredientUnit,
       aveStar,
     });
 
