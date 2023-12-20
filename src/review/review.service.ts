@@ -20,9 +20,7 @@ export class ReviewService {
     const found = await this.reviewRepositoty.findOneBy({ reviewId });
 
     if (!found) {
-      throw new NotFoundException(
-        `reviewId가 ${reviewId}인 리뷰를 찾을 수 없습니다.`,
-      );
+      throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
     return found;
   }
@@ -31,7 +29,7 @@ export class ReviewService {
     const result = await this.reviewRepositoty.delete(reviewId);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`can't find reviewId ${reviewId}`);
+      throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
   }
 
@@ -44,9 +42,7 @@ export class ReviewService {
     });
 
     if (!found) {
-      throw new NotFoundException(
-        `reviewId가 ${reviewId}인 리뷰를 찾을 수 없습니다.`,
-      );
+      throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
 
     await this.reviewRepositoty.update(reviewId, updateReviewDto);

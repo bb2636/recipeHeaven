@@ -18,9 +18,7 @@ export class RecipeService {
     const found = await this.recipeRepository.findOneBy({ recipeId });
 
     if (!found) {
-      throw new NotFoundException(
-        `recipeId가 ${recipeId}인 레시피를 찾을 수 없습니다`,
-      );
+      throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);
     }
     return found;
   }
@@ -42,9 +40,7 @@ export class RecipeService {
     });
 
     if (!found) {
-      throw new NotFoundException(
-        `recipeId가 ${recipeId}인 레시피를 찾을 수 없습니다`,
-      );
+      throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);
     }
     await this.recipeRepository.update(recipeId, updateRecipeDto);
     const updateRecipe = await this.recipeRepository.findOne({
