@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { error } from 'console';
 
 @Controller('auth')
 export class AuthController {
