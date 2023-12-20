@@ -7,12 +7,7 @@ import { APP_PIPE } from '@nestjs/core';
 import { RecipeModule } from './recipe/recipe.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(ormConfig()),
-    // BoardsModule,
-    AuthModule,
-    RecipeModule,
-  ],
+  imports: [TypeOrmModule.forRoot(ormConfig()), AuthModule, RecipeModule],
   providers: [
     {
       provide: APP_PIPE,
