@@ -1,4 +1,10 @@
-import { IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class AuthCredentialsDto {
   @IsString()
@@ -13,4 +19,9 @@ export class AuthCredentialsDto {
     message: 'password only accepts english and number',
   })
   password: string;
+
+  @IsString()
+  @MaxLength(60)
+  @IsEmail()
+  email: string;
 }
