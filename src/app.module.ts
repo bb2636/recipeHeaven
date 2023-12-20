@@ -5,9 +5,15 @@ import { ormConfig } from './configs/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { APP_PIPE } from '@nestjs/core';
 import { RecipeModule } from './recipe/recipe.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ormConfig()), AuthModule, RecipeModule],
+  imports: [
+    TypeOrmModule.forRoot(ormConfig()),
+    AuthModule,
+    RecipeModule,
+    ReviewModule,
+  ],
   providers: [
     {
       provide: APP_PIPE,

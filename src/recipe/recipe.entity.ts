@@ -1,11 +1,13 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/auth/user.entity';
+import { Review } from 'src/review/review.entity';
 import {
   BaseEntity,
   Column,
   Entity,
   JoinColumn,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -43,4 +45,7 @@ export class Recipe extends BaseEntity {
   @ManyToMany(() => User, (user) => user.recipes)
   @JoinColumn()
   user: User;
+
+  @ManyToOne(() => Review)
+  review: Review;
 }
