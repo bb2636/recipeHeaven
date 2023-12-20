@@ -22,7 +22,7 @@ export class RecipeController {
     return this.recipeService.getAllRecipe();
   }
 
-  @Post()
+  @Post('/insert')
   createRecipe(@Body() createRecipeDto: CreateRecipeDto): Promise<Recipe> {
     return this.recipeService.createRecipe(createRecipeDto);
   }

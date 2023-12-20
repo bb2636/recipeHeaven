@@ -23,7 +23,7 @@ export class ReviewController {
     return this.reviewService.getAllReview();
   }
 
-  @Post()
+  @Post('/insert')
   createReview(@Body() createReviewDto: CreateReviewDto): Promise<Review> {
     return this.reviewService.createReview(createReviewDto);
   }
