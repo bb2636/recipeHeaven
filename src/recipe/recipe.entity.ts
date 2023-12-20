@@ -4,6 +4,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -21,13 +22,13 @@ export class Recipe extends BaseEntity {
   @Column()
   img: string;
 
-  @Column()
+  @Column({ type: 'int' })
   portion: number;
 
-  @Column()
+  @Column({ type: 'int' })
   leadTime: number;
 
-  @Column()
+  @Column({ type: 'int' })
   level: number;
 
   @Column('json')
@@ -40,5 +41,6 @@ export class Recipe extends BaseEntity {
   aveStar: number;
 
   @ManyToMany(() => User, (user) => user.recipes)
+  @JoinColumn()
   user: User;
 }
