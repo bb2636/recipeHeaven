@@ -3,11 +3,13 @@ import { Recipe } from 'src/recipe/recipe.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  Timestamp,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -18,11 +20,17 @@ export class Review extends BaseEntity {
   @Column({ type: 'int' })
   star: number;
 
-  @Column({ type: 'text' })
-  comment: Text;
+  @Column()
+  comment: string;
 
-  @Column({ type: 'timestamp' })
-  time: Timestamp;
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'id' })
