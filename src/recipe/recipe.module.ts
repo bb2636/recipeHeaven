@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recipe } from './recipe.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { RecipeRepository } from './recipe.repository';
-import { Review } from 'src/review/review.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Recipe]), AuthModule],

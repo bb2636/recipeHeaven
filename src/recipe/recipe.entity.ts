@@ -5,8 +5,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -39,9 +37,6 @@ export class Recipe extends BaseEntity {
 
   @Column('json')
   step: { stepNum: number; des: string; imgUrl: string }[];
-
-  @Column()
-  aveStar: number;
 
   @ManyToOne((type) => User, (user) => user.recipes, { eager: false })
   user: User;
