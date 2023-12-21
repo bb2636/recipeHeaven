@@ -8,6 +8,7 @@ import {
   JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -42,9 +43,9 @@ export class User extends BaseEntity {
   email: string;
 
   @JoinColumn()
-  @ManyToMany(() => Recipe, (recipe) => recipe.user)
+  @OneToMany(() => Recipe, (recipe) => recipe.user)
   recipes: Recipe[];
 
-  @ManyToOne(() => Review)
-  review: Review;
+  @OneToMany(() => Review, (review) => review.user)
+  review: Review[];
 }

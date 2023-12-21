@@ -32,11 +32,11 @@ export class Review extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, (user) => user.review)
   @JoinColumn({ name: 'id' })
   user: User;
 
-  @ManyToOne(() => Recipe)
+  @ManyToOne(() => Recipe, (recipe) => recipe.review)
   @JoinColumn({ name: 'recipeId' })
   recipe: Recipe;
 }
