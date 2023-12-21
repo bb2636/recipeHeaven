@@ -42,10 +42,9 @@ export class User extends BaseEntity {
   @IsNotEmpty()
   email: string;
 
-  @JoinColumn()
-  @OneToMany(() => Recipe, (recipe) => recipe.user)
+  @OneToMany((type) => Recipe, (recipe) => recipe.user, { eager: true })
   recipes: Recipe[];
 
-  @OneToMany(() => Review, (review) => review.user)
-  review: Review[];
+  @OneToMany((type) => Review, (review) => review.user, { eager: true })
+  reviews: Review[];
 }

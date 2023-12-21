@@ -3,6 +3,7 @@ import { ReviewRepository } from './review.repositoy';
 import { Review } from './review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class ReviewService {
@@ -12,8 +13,8 @@ export class ReviewService {
     return this.reviewRepositoty.find();
   }
 
-  createReview(createReviewDto: CreateReviewDto): Promise<Review> {
-    return this.reviewRepositoty.createReview(createReviewDto);
+  createReview(createReviewDto: CreateReviewDto, user: User): Promise<Review> {
+    return this.reviewRepositoty.createReview(createReviewDto, user);
   }
 
   async getReviewById(reviewId: number): Promise<Review> {

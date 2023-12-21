@@ -7,13 +7,20 @@ import {
   Post,
   Delete,
   Patch,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { Recipe } from './recipe.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user-decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('recipe')
+@UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
 
@@ -23,8 +30,12 @@ export class RecipeController {
   }
 
   @Post('/insert')
-  createRecipe(@Body() createRecipeDto: CreateRecipeDto): Promise<Recipe> {
-    return this.recipeService.createRecipe(createRecipeDto);
+  @UsePipes(ValidationPipe)
+  createRecipe(
+    @Body() createRecipeDto: CreateRecipeDto,
+    @GetUser() user: User,
+  ): Promise<Recipe> {
+    return this.recipeService.createRecipe(createRecipeDto, user);
   }
   @Get('/:recipeId')
   getRecipeById(@Param('recipeId') recipeId: number): Promise<Recipe> {

@@ -43,10 +43,9 @@ export class Recipe extends BaseEntity {
   @Column()
   aveStar: number;
 
-  @ManyToOne(() => User, (user) => user.recipes)
-  @JoinColumn()
+  @ManyToOne((type) => User, (user) => user.recipes, { eager: false })
   user: User;
 
-  @OneToMany(() => Review, (review) => review.recipe)
-  review: Review[];
+  @OneToMany((type) => Review, (review) => review.recipe, { eager: true })
+  reviews: Review[];
 }

@@ -7,12 +7,16 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { Review } from './review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { create } from 'domain';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user-decorator';
 
 @Controller('review')
 export class ReviewController {
@@ -24,8 +28,12 @@ export class ReviewController {
   }
 
   @Post('/insert')
-  createReview(@Body() createReviewDto: CreateReviewDto): Promise<Review> {
-    return this.reviewService.createReview(createReviewDto);
+  @UsePipes(ValidationPipe)
+  createReview(
+    @Body() createReviewDto: CreateReviewDto,
+    @GetUser() user: User,
+  ): Promise<Review> {
+    return this.reviewService.createReview(createReviewDto, user);
   }
 
   @Get('/:reviewId')

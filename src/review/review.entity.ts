@@ -6,7 +6,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -32,11 +31,9 @@ export class Review extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.review)
-  @JoinColumn({ name: 'id' })
+  @ManyToOne((type) => User, (user) => user.reviews, { eager: false })
   user: User;
 
-  @ManyToOne(() => Recipe, (recipe) => recipe.review)
-  @JoinColumn({ name: 'recipeId' })
+  @ManyToOne((type) => Recipe, (recipe) => recipe.reviews, { eager: false })
   recipe: Recipe;
 }

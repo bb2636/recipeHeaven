@@ -3,6 +3,7 @@ import { RecipeRepository } from './recipe.repository';
 import { Recipe } from './recipe.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class RecipeService {
@@ -11,8 +12,8 @@ export class RecipeService {
   async getAllRecipe(): Promise<Recipe[]> {
     return this.recipeRepository.find();
   }
-  createRecipe(createRecipeDto: CreateRecipeDto): Promise<Recipe> {
-    return this.recipeRepository.createRecipe(createRecipeDto);
+  createRecipe(createRecipeDto: CreateRecipeDto, user: User): Promise<Recipe> {
+    return this.recipeRepository.createRecipe(createRecipeDto, user);
   }
   async getRecipeById(recipeId: number): Promise<Recipe> {
     const found = await this.recipeRepository.findOneBy({ recipeId });
