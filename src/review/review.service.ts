@@ -33,8 +33,11 @@ export class ReviewService {
     return found;
   }
 
-  async deleteReview(reviewId: number): Promise<void> {
-    const result = await this.reviewRepositoty.delete(reviewId);
+  async deleteReview(reviewId: number, user: User): Promise<void> {
+    const result = await this.reviewRepositoty.delete({
+      reviewId,
+      user: { id: user.id },
+    });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Review with id ${reviewId}`);

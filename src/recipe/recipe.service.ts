@@ -29,8 +29,11 @@ export class RecipeService {
     }
     return found;
   }
-  async deleteRecipe(recipeId: number): Promise<void> {
-    const result = await this.recipeRepository.delete(recipeId);
+  async deleteRecipe(recipeId: number, user: User): Promise<void> {
+    const result = await this.recipeRepository.delete({
+      recipeId,
+      user: { id: user.id },
+    });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);

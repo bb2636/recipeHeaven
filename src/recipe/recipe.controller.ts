@@ -49,8 +49,11 @@ export class RecipeController {
   }
   //레시피 삭제(id일치)
   @Delete('/:recipeId')
-  deleteRecipe(@Param('recipeId', ParseIntPipe) recipeId): Promise<void> {
-    return this.recipeService.deleteRecipe(recipeId);
+  deleteRecipe(
+    @Param('recipeId', ParseIntPipe) recipeId,
+    @GetUser() user: User,
+  ): Promise<void> {
+    return this.recipeService.deleteRecipe(recipeId, user);
   }
   //레시피 수정(id일치)
   @Patch('/:recipeId')
