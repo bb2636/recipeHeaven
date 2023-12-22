@@ -25,10 +25,10 @@ function ormConfig(): TypeOrmModuleOptions {
 
   return {
     type: 'mysql',
-    database: 'board_app',
-    host: 'localhost',
+    database: 'recipeheaven',
+    host: 'recipeheaven.cj4yc4iiculk.ap-northeast-2.rds.amazonaws.com',
     port: Number(3306),
-    username: 'root',
+    username: 'admin',
     password: 'qkseltqnfdl1',
     logging: true,
     synchronize: commonConf.SYNCRONIZE,
