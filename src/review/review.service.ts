@@ -7,7 +7,7 @@ import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class ReviewService {
-  constructor(private reviewRepositoty: ReviewRepository) {}
+  constructor(private readonly reviewRepositoty: ReviewRepository) {}
 
   async getAllReview(): Promise<Review[]> {
     return this.reviewRepositoty.find();

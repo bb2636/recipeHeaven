@@ -7,7 +7,7 @@ import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class RecipeService {
-  constructor(private recipeRepository: RecipeRepository) {}
+  constructor(private readonly recipeRepository: RecipeRepository) {}
 
   async getAllRecipe(): Promise<Recipe[]> {
     return this.recipeRepository.find();
