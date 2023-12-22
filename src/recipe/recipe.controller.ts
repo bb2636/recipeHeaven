@@ -23,12 +23,17 @@ import { User } from 'src/auth/user.entity';
 @UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
-
-  @Get('/')
-  getAllTask(): Promise<Recipe[]> {
+  //전체조회
+  @Get()
+  getAllRecipe(): Promise<Recipe[]> {
     return this.recipeService.getAllRecipe();
   }
-
+  //한 유저가 등록한 전체 레시피
+  @Get()
+  getUserAllRecipe(@GetUser() user: User): Promise<Recipe[]> {
+    return this.recipeService.getUserAllRecipe(user);
+  }
+  //유저 정보 포함한 등록
   @Post('/insert')
   @UsePipes(ValidationPipe)
   createRecipe(
@@ -37,14 +42,17 @@ export class RecipeController {
   ): Promise<Recipe> {
     return this.recipeService.createRecipe(createRecipeDto, user);
   }
+  //레시피 상세 조회
   @Get('/:recipeId')
   getRecipeById(@Param('recipeId') recipeId: number): Promise<Recipe> {
     return this.recipeService.getRecipeById(recipeId);
   }
+  //레시피 삭제(id일치)
   @Delete('/:recipeId')
   deleteRecipe(@Param('recipeId', ParseIntPipe) recipeId): Promise<void> {
     return this.recipeService.deleteRecipe(recipeId);
   }
+  //레시피 수정(id일치)
   @Patch('/:recipeId')
   updateRecipe(
     @Param('recipeId') recipeId: number,

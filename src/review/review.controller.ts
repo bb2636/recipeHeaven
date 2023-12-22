@@ -22,9 +22,13 @@ import { GetUser } from 'src/auth/get-user-decorator';
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
-  @Get('/')
-  getAllTask(): Promise<Review[]> {
+  @Get()
+  getAllReview(): Promise<Review[]> {
     return this.reviewService.getAllReview();
+  }
+  @Get()
+  getUserAllReview(@GetUser() user: User): Promise<Review[]> {
+    return this.reviewService.getUserAllReview(user);
   }
 
   @Post('/insert')

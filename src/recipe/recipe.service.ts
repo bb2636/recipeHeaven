@@ -12,6 +12,12 @@ export class RecipeService {
   async getAllRecipe(): Promise<Recipe[]> {
     return this.recipeRepository.find();
   }
+  async getUserAllRecipe(user: User): Promise<Recipe[]> {
+    const query = this.recipeRepository.createQueryBuilder('recipe');
+    query.where('recipe.userId = : userId', { userId: user.id });
+    const recipes = await query.getMany();
+    return recipes;
+  }
   createRecipe(createRecipeDto: CreateRecipeDto, user: User): Promise<Recipe> {
     return this.recipeRepository.createRecipe(createRecipeDto, user);
   }
