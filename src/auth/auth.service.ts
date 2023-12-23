@@ -1,34 +1,64 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserRepository } from './user.repository';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
-import * as bcrypt from 'bcryptjs';
-import { JwtService } from '@nestjs/jwt';
+import axios from 'axios';
+import * as qs from 'qs';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private jwtService: JwtService,
-  ) {}
+  async kakaoLogin(param: { code: string; domain: string }): Promise<any> {
+    const { code, domain } = param;
+    const kakaoKey = 'f0f5c0502b3bb5ec7080c7b64a6d18ce';
+    const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
+    const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    this.userRepository.createUser(authCredentialsDto);
-  }
+    const body = {
+      grant_type: 'authorization_code',
+      client_id: kakaoKey,
+      redirect_uri: `${domain}/auth/login/kakao`,
+      code,
+    };
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    };
 
-  async signIn(
-    authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
-    const { username, password } = authCredentialsDto;
-    const user = await this.userRepository.findOneBy({ username });
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: kakaoTokenUrl,
+        timeout: 30000,
+        headers,
+        data: qs.stringify(body),
+      });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      // 유저 토큰 생성 (Secret + Payload)
-      const payload = { username };
-      const accessToken = await this.jwtService.sign(payload);
+      if (response.status === 200) {
+        console.log(`kakaoToken : ${JSON.stringify(response.data)}`);
 
-      return { accessToken };
-    } else {
-      throw new UnauthorizedException('Login failed..');
+        const headerUserInfo = {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+          Authorization: 'Bearer' + response.data.accessToken,
+        };
+        console.log(`url : ${kakaoTokenUrl}`);
+        console.log(`headers : ${JSON.stringify(headerUserInfo)}`);
+        const responseUserInfo = await axios({
+          method: 'GET',
+          url: kakaoUserInfoUrl,
+          timeout: 30000,
+          headers: headerUserInfo,
+        });
+        console.log(`responseUserInfo.status : ${responseUserInfo.status}`);
+        if (responseUserInfo.status === 200) {
+          console.log(
+            `kakaoUserInfo : ${JSON.stringify(responseUserInfo.data)}`,
+          );
+          return responseUserInfo.data;
+        } else {
+          throw new UnauthorizedException();
+        }
+      } else {
+        throw new UnauthorizedException();
+      }
+    } catch (e) {
+      console.log(e);
+      throw new UnauthorizedException();
     }
   }
 }

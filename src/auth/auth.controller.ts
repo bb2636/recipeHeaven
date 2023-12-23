@@ -1,37 +1,38 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Post,
-  UseGuards,
-  ValidationPipe,
+  Response,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './dto/auth-credential.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './get-user-decorator';
-import { User } from './user.entity';
+// import { AuthCredentialsDto } from './dto/auth-credential.dto';
+// import { AuthGuard } from '@nestjs/passport';
 
-@Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/signup')
-  signUp(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<void> {
-    return this.authService.signUp(authCredentialsDto);
-  }
+  @Post('/login/kakao')
+  async login(@Body() body: any, @Response() res): Promise<any> {
+    try {
+      const { code, domain } = body;
 
-  @Post('/signin')
-  signIn(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
-    return this.authService.signIn(authCredentialsDto);
-  }
+      if (!code || !domain) {
+        throw new BadRequestException('카카오 정보가 없습니다.');
+      }
+      const kakao = await this.authService.kakaoLogin({ code, domain });
 
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
-    console.log('req', user);
+      if (!kakao.id) {
+        throw new BadRequestException('카카오 정보가 없습니다.');
+      }
+
+      res.send({
+        user: kakao,
+        message: 'success',
+      });
+    } catch (e) {
+      throw new UnauthorizedException();
+    }
   }
 }
