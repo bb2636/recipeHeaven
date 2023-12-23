@@ -27,11 +27,8 @@ export class SubCategoryController {
   }
 
   @Post('/insert')
-  createSub(
-    @Body() createTopDto: CreateSubDto,
-    topCategoryId: number,
-  ): Promise<Sub> {
-    return this.subService.createSub(createTopDto, topCategoryId);
+  createSub(@Body() createTopDto: CreateSubDto): Promise<Sub> {
+    return this.subService.createSub(createTopDto);
   }
 
   @Patch('/:subCategoryId')
