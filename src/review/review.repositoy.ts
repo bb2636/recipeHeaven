@@ -4,23 +4,19 @@ import { DataSource, Repository } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { User } from 'src/auth/user.entity';
 
-export class ReviewRepository {
-  constructor(
-    @InjectRepository(Review)
-    private readonly reviewRepository: Repository<Review>,
-  ) {}
-
+export class ReviewRepository extends Repository<Review> {
+  constructor(@InjectRepository(Review) private dataSource: DataSource) {
+    super(Review, dataSource.manager);
+  }
   async createReview(
     createReviewDto: CreateReviewDto,
     user: User,
   ): Promise<Review> {
-    try {
-      const { star, comment } = createReviewDto;
-      const review = this.reviewRepository.create({ star, comment, user });
-      await this.reviewRepository.save(review);
-      return review;
-    } catch (error) {
-      throw new Error();
-    }
+    const { star, comment } = createReviewDto;
+
+    const review = this.create({ star, comment, user });
+
+    await this.save(review);
+    return review;
   }
 }
