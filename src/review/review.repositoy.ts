@@ -5,7 +5,9 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { User } from 'src/auth/user.entity';
 
 export class ReviewRepository extends Repository<Review> {
-  constructor(@InjectRepository(Review) private dataSource: DataSource) {
+  constructor(
+    @InjectRepository(Review) private readonly dataSource: DataSource,
+  ) {
     super(Review, dataSource.manager);
   }
   async createReview(
