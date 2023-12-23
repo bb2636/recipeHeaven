@@ -1,32 +1,36 @@
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Recipe } from './recipe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { User } from 'src/auth/user.entity';
 
-export class RecipeRepository extends Repository<Recipe> {
-  constructor(@InjectRepository(Recipe) private dataSource: DataSource) {
-    super(Recipe, dataSource.manager);
-  }
+export class RecipeRepository {
+  constructor(
+    @InjectRepository(Recipe)
+    private readonly recipeRepository: Repository<Recipe>,
+  ) {}
+
   async createRecipe(
     createRecipeDto: CreateRecipeDto,
     user: User,
   ): Promise<Recipe> {
-    const { recipeName, img, portion, leadTime, level, ingredient, step } =
-      createRecipeDto;
-
-    const recipe = this.create({
-      recipeName,
-      img,
-      portion,
-      leadTime,
-      level,
-      ingredient,
-      step,
-      user,
-    });
-
-    await this.save(recipe);
-    return recipe;
+    try {
+      const { recipeName, img, portion, leadTime, level, ingredient, step } =
+        createRecipeDto;
+      const recipe = this.recipeRepository.create({
+        recipeName,
+        img,
+        portion,
+        leadTime,
+        level,
+        ingredient,
+        step,
+        user,
+      });
+      await this.recipeRepository.save(recipe);
+      return recipe;
+    } catch (errpr) {
+      throw new Error('레시피 생성 중 에러가 발생했습니다');
+    }
   }
 }
