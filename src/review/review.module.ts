@@ -6,7 +6,6 @@ import { RecipeModule } from 'src/recipe/recipe.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repositoy';
-import { Recipe } from 'src/recipe/recipe.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Review]), AuthModule, RecipeModule],
