@@ -6,8 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_PIPE } from '@nestjs/core';
 import { RecipeModule } from './recipe/recipe.module';
 import { ReviewModule } from './review/review.module';
-// import { UploadModule } from './upload/upload.module';
-import { ConfigModule } from '@nestjs/config';
+import { TopCategoryModule } from './top-category/top-category.module';
+import { SubCategoryModule } from './sub-category/sub-category.module';
 
 @Module({
   imports: [
@@ -15,8 +15,6 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     RecipeModule,
     ReviewModule,
-    // UploadModule,
-    ConfigModule.forRoot({ isGlobal: true }),
   ],
   providers: [
     {
