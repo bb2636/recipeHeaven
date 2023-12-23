@@ -15,6 +15,8 @@ import { SubCategoryModule } from './sub-category/sub-category.module';
     AuthModule,
     RecipeModule,
     ReviewModule,
+    TopCategoryModule,
+    SubCategoryModule,
   ],
   providers: [
     {
