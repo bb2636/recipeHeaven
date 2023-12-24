@@ -53,7 +53,7 @@ export class RecipeController {
     @Param('recipeId', ParseIntPipe) recipeId,
     @GetUser() user: User,
   ): Promise<void> {
-    return this.recipeService.deleteRecipe(recipeId, user);
+    return this.recipeService.deleteRecipe(recipeId);
   }
   //레시피 수정(id일치)
   @Patch('/:recipeId')

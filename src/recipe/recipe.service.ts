@@ -4,6 +4,7 @@ import { Recipe } from './recipe.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { User } from 'src/auth/user.entity';
+import { DeleteRecipeDto } from './dto/delete-recipe.dto';
 
 @Injectable()
 export class RecipeService {
@@ -29,7 +30,8 @@ export class RecipeService {
     }
     return recipe;
   }
-  async deleteRecipe(recipeId: number, user: User): Promise<void> {
+  async deleteRecipe(deleteRecipeDto: DeleteRecipeDto): Promise<void> {
+    const { recipeId, user } = deleteRecipeDto;
     const recipe = await this.recipeRepository.delete({
       recipeId,
       user: { id: user.id },
