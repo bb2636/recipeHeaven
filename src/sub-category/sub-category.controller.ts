@@ -13,7 +13,7 @@ import { UpdateSubDto } from './dto/update-sub.dto';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
 
-@Controller('sub-category')
+@Controller('sub-categorys')
 export class SubCategoryController {
   constructor(private subService: SubCategoryService) {}
 
@@ -26,7 +26,7 @@ export class SubCategoryController {
     return this.subService.getSubById(subCategoryId);
   }
 
-  @Post('/insert')
+  @Post()
   createSub(@Body() createTopDto: CreateSubDto): Promise<Sub> {
     return this.subService.createSub(createTopDto);
   }

@@ -17,7 +17,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user-decorator';
 
-@Controller('review')
+@Controller('reviews')
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
@@ -30,7 +30,7 @@ export class ReviewController {
     return this.reviewService.getUserAllReview(user);
   }
 
-  @Post('/insert')
+  @Post()
   @UsePipes(ValidationPipe)
   createReview(
     @Body() createReviewDto: CreateReviewDto,

@@ -13,7 +13,7 @@ import { Top } from './top-category.entity';
 import { CreateTopDto } from './dto/create-top.dto';
 import { UpdateTopDto } from './dto/update-top.dto';
 
-@Controller('top-category')
+@Controller('top-categorys')
 export class TopCategoryController {
   constructor(private topService: TopCategoryService) {}
 
@@ -26,7 +26,7 @@ export class TopCategoryController {
     return this.topService.getTopById(topCategoryId);
   }
 
-  @Post('/insert')
+  @Post()
   createTop(@Body() createTopDto: CreateTopDto): Promise<Top> {
     return this.topService.createTop(createTopDto);
   }
