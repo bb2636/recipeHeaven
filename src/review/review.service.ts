@@ -4,6 +4,7 @@ import { Review } from './review.entity';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { User } from 'src/auth/user.entity';
+import { DeleteReviewDto } from './dto/delete-review.dto';
 
 @Injectable()
 export class ReviewService {
@@ -33,7 +34,8 @@ export class ReviewService {
     return review;
   }
 
-  async deleteReview(reviewId: number, user: User): Promise<void> {
+  async deleteReview(deleteReviewDto: DeleteReviewDto): Promise<void> {
+    const { reviewId, user } = deleteReviewDto;
     const review = await this.reviewRepositoty.delete({
       reviewId,
       user: { id: user.id },
