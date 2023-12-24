@@ -16,14 +16,14 @@ export class TopCategoryService {
     return this.topRepository.createTop(createTopDto);
   }
   async getTopById(topCategoryId: number): Promise<Top> {
-    const found = await this.topRepository.findOneBy({ topCategoryId });
+    const topCategory = await this.topRepository.findOneBy({ topCategoryId });
 
-    if (!found) {
+    if (!topCategory) {
       throw new NotFoundException(
         `Can't find Category with id ${topCategoryId}`,
       );
     }
-    return found;
+    return topCategory;
   }
   async deleteTop(topCategoryId: number): Promise<void> {
     const result = await this.topRepository.delete({ topCategoryId });
@@ -37,11 +37,11 @@ export class TopCategoryService {
     topCategoryId: number,
     updateTopDto: UpdateTopDto,
   ): Promise<Top> {
-    const found = await this.topRepository.findOne({
+    const topCategory = await this.topRepository.findOne({
       where: { topCategoryId },
     });
 
-    if (!found) {
+    if (!topCategory) {
       throw new NotFoundException(
         `Can't find Category with id ${topCategoryId}`,
       );

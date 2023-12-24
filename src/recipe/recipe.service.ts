@@ -22,20 +22,20 @@ export class RecipeService {
     return this.recipeRepository.createRecipe(createRecipeDto, user);
   }
   async getRecipeById(recipeId: number): Promise<Recipe> {
-    const found = await this.recipeRepository.findOneBy({ recipeId });
+    const recipe = await this.recipeRepository.findOneBy({ recipeId });
 
-    if (!found) {
+    if (!recipe) {
       throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);
     }
-    return found;
+    return recipe;
   }
   async deleteRecipe(recipeId: number, user: User): Promise<void> {
-    const result = await this.recipeRepository.delete({
+    const recipe = await this.recipeRepository.delete({
       recipeId,
       user: { id: user.id },
     });
 
-    if (result.affected === 0) {
+    if (recipe.affected === 0) {
       throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);
     }
   }
@@ -43,13 +43,13 @@ export class RecipeService {
     recipeId: number,
     updateRecipeDto: UpdateRecipeDto,
   ): Promise<Recipe> {
-    const found = await this.recipeRepository.findOne({
+    const recipe = await this.recipeRepository.findOne({
       where: {
         recipeId,
       },
     });
 
-    if (!found) {
+    if (!recipe) {
       throw new NotFoundException(`Can't find Recipe with id ${recipeId}`);
     }
     await this.recipeRepository.update(recipeId, updateRecipeDto);

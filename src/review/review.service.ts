@@ -25,21 +25,21 @@ export class ReviewService {
   }
 
   async getReviewById(reviewId: number): Promise<Review> {
-    const found = await this.reviewRepositoty.findOneBy({ reviewId });
+    const review = await this.reviewRepositoty.findOneBy({ reviewId });
 
-    if (!found) {
+    if (!review) {
       throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
-    return found;
+    return review;
   }
 
   async deleteReview(reviewId: number, user: User): Promise<void> {
-    const result = await this.reviewRepositoty.delete({
+    const review = await this.reviewRepositoty.delete({
       reviewId,
       user: { id: user.id },
     });
 
-    if (result.affected === 0) {
+    if (review.affected === 0) {
       throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
   }
@@ -48,11 +48,11 @@ export class ReviewService {
     reviewId: number,
     updateReviewDto: UpdateReviewDto,
   ): Promise<Review> {
-    const found = await this.reviewRepositoty.findOne({
+    const review = await this.reviewRepositoty.findOne({
       where: { reviewId },
     });
 
-    if (!found) {
+    if (!review) {
       throw new NotFoundException(`Can't find Review with id ${reviewId}`);
     }
 
