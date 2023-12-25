@@ -16,14 +16,14 @@ export class SubCategoryService {
     return this.subRepository.createSub(createSubDto);
   }
   async getSubById(subCategoryId: number): Promise<Sub> {
-    const found = await this.subRepository.findOneBy({ subCategoryId });
+    const subCategory = await this.subRepository.findOneBy({ subCategoryId });
 
-    if (!found) {
+    if (!subCategory) {
       throw new NotFoundException(
         `Can't find Category with id ${subCategoryId}`,
       );
     }
-    return found;
+    return subCategory;
   }
   async deleteSub(subCategoryId: number): Promise<void> {
     const result = await this.subRepository.delete({ subCategoryId });
@@ -38,23 +38,16 @@ export class SubCategoryService {
     updateSubDto: UpdateSubDto,
     topCategoryId: number,
   ): Promise<Sub> {
-    const found = await this.subRepository.update(
+    const subCategory = await this.subRepository.update(
       { subCategoryId },
       { ...updateSubDto, topCategoryId },
     );
-    //const found = await.this.subRepository.findOne({
-    //where: { subCategoryId },
-    //});
-    if (found.affected === 0) {
+
+    if (subCategory.affected === 0) {
       throw new NotFoundException(
         `Can't find Category with id ${subCategoryId}`,
       );
     }
     return this.getSubById(subCategoryId);
-    // found.subCategoryType = updateSubDto.subCategoryType;
-    // found.topCategoryId = topCategoryId;
-
-    // await this.subRepository.save(found);
-    // return found;
   }
 }

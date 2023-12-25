@@ -19,7 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
 
-@Controller('recipe')
+@Controller('recipes')
 @UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
@@ -34,7 +34,7 @@ export class RecipeController {
     return this.recipeService.getUserAllRecipe(user);
   }
   //유저 정보 포함한 등록
-  @Post('/insert')
+  @Post()
   @UsePipes(ValidationPipe)
   createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
@@ -53,7 +53,7 @@ export class RecipeController {
     @Param('recipeId', ParseIntPipe) recipeId,
     @GetUser() user: User,
   ): Promise<void> {
-    return this.recipeService.deleteRecipe(recipeId, user);
+    return this.recipeService.deleteRecipe(recipeId);
   }
   //레시피 수정(id일치)
   @Patch('/:recipeId')

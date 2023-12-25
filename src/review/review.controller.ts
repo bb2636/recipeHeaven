@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,8 +17,10 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user-decorator';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('review')
+@Controller('reviews')
+@UseGuards(AuthGuard())
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
@@ -30,7 +33,7 @@ export class ReviewController {
     return this.reviewService.getUserAllReview(user);
   }
 
-  @Post('/insert')
+  @Post()
   @UsePipes(ValidationPipe)
   createReview(
     @Body() createReviewDto: CreateReviewDto,
@@ -57,6 +60,6 @@ export class ReviewController {
     @Param('reviewId', ParseIntPipe) reviewId,
     @GetUser() user: User,
   ): Promise<void> {
-    return this.reviewService.deleteReview(reviewId, user);
+    return this.reviewService.deleteReview(reviewId);
   }
 }

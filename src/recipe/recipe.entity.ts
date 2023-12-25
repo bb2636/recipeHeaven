@@ -1,13 +1,17 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/auth/user.entity';
 import { Review } from 'src/review/review.entity';
+import { Sub } from 'src/sub-category/sub-category.entity';
 import {
   BaseEntity,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -32,6 +36,15 @@ export class Recipe extends BaseEntity {
   @Column({ type: 'int' })
   level: number;
 
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
+
   @Column('json')
   ingredient: { item: string; unit: string }[]; //배열안에 객체
 
@@ -43,4 +56,7 @@ export class Recipe extends BaseEntity {
 
   @OneToMany((type) => Review, (review) => review.recipe, { eager: true })
   reviews: Review[];
+
+  @ManyToOne((type) => Sub, (sub) => sub.recipes, { eager: false })
+  sub: Sub;
 }
