@@ -4,8 +4,9 @@ export class DeleteRecipeDto {
   user: User;
   recipeId: number;
 
-  constructor(deleteRecipeDto: { recipeId: number }, user: User) {
+  constructor(deleteRecipeDto: { recipeId: number; user: User }) {
+    const { user, recipeId } = deleteRecipeDto;
     this.user = user;
-    this.recipeId = deleteRecipeDto.recipeId;
+    this.recipeId = recipeId;
   }
 }

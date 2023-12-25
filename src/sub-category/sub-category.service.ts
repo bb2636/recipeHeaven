@@ -42,19 +42,12 @@ export class SubCategoryService {
       { subCategoryId },
       { ...updateSubDto, topCategoryId },
     );
-    //const found = await.this.subRepository.findOne({
-    //where: { subCategoryId },
-    //});
+
     if (subCategory.affected === 0) {
       throw new NotFoundException(
         `Can't find Category with id ${subCategoryId}`,
       );
     }
     return this.getSubById(subCategoryId);
-    // found.subCategoryType = updateSubDto.subCategoryType;
-    // found.topCategoryId = topCategoryId;
-
-    // await this.subRepository.save(found);
-    // return found;
   }
 }

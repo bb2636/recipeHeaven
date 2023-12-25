@@ -1,6 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/auth/user.entity';
 import { Review } from 'src/review/review.entity';
+import { Sub } from 'src/sub-category/sub-category.entity';
 import {
   BaseEntity,
   Column,
@@ -55,4 +56,7 @@ export class Recipe extends BaseEntity {
 
   @OneToMany((type) => Review, (review) => review.recipe, { eager: true })
   reviews: Review[];
+
+  @ManyToOne((type) => Sub, (sub) => sub.recipes, { eager: false })
+  sub: Sub;
 }

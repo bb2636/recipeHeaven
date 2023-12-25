@@ -4,8 +4,9 @@ export class DeleteReviewDto {
   user: User;
   reviewId: number;
 
-  constructor(deleteReviewDto: { reviewId: number }, user: User) {
+  constructor(deleteReviewDto: { reviewId: number; user: User }) {
+    const { user, reviewId } = deleteReviewDto;
     this.user = user;
-    this.reviewId = deleteReviewDto.reviewId;
+    this.reviewId = reviewId;
   }
 }
