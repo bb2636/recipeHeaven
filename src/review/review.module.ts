@@ -6,9 +6,15 @@ import { RecipeModule } from 'src/recipe/recipe.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repositoy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Review]), AuthModule, RecipeModule],
+  imports: [
+    TypeOrmModule.forFeature([Review]),
+    AuthModule,
+    RecipeModule,
+    PassportModule,
+  ],
   controllers: [ReviewController],
   providers: [ReviewService, ReviewRepository],
 })

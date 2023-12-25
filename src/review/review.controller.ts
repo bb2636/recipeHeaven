@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,8 +17,10 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { User } from 'src/auth/user.entity';
 import { GetUser } from 'src/auth/get-user-decorator';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reviews')
+@UseGuards(AuthGuard())
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
