@@ -8,14 +8,14 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { SubCategoryService } from './sub-category.service';
+import { SubService } from './sub-category.service';
 import { UpdateSubDto } from './dto/update-sub.dto';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
 
 @Controller('sub-categorys')
 export class SubCategoryController {
-  constructor(private subService: SubCategoryService) {}
+  constructor(private subService: SubService) {}
 
   @Get()
   getAllCategory(): Promise<Sub[]> {

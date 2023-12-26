@@ -18,6 +18,7 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
+import { Sub } from 'src/sub-category/sub-category.entity';
 
 @Controller('recipes')
 @UseGuards(AuthGuard())
@@ -39,8 +40,9 @@ export class RecipeController {
   createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
     @GetUser() user: User,
+    @Body() sub: Sub,
   ): Promise<Recipe> {
-    return this.recipeService.createRecipe(createRecipeDto, user);
+    return this.recipeService.createRecipe(createRecipeDto, user, sub);
   }
   //레시피 상세 조회
   @Get('/:recipeId')
