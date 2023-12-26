@@ -3,17 +3,13 @@ import { SubRepository } from './sub-category.repository';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Top } from 'src/top-category/top-category.entity';
+import { TopRepository } from 'src/top-category/top-category.repository';
 
 @Injectable()
 export class SubService {
   constructor(
-    @InjectRepository(Sub)
-    private subRepository: Repository<Sub>,
-    @InjectRepository(Top)
-    private topRepository: Repository<Top>,
+    private readonly subRepository: SubRepository,
+    private readonly topRepository: TopRepository,
   ) {}
 
   async getAllCategory(): Promise<Sub[]> {

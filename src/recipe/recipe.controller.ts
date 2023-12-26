@@ -39,6 +39,7 @@ export class RecipeController {
   @UsePipes(ValidationPipe)
   createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
+    @Param() sub: Sub,
     @GetUser() user: User,
     @Body() sub: Sub,
   ): Promise<Recipe> {

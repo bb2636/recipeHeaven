@@ -9,5 +9,6 @@ import { TopRepository } from './top-category.repository';
   imports: [TypeOrmModule.forFeature([Top])],
   controllers: [TopCategoryController],
   providers: [TopCategoryService, TopRepository],
+  exports: [TopRepository],
 })
 export class TopCategoryModule {}

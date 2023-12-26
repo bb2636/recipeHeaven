@@ -33,13 +33,14 @@ export class ReviewController {
     return this.reviewService.getUserAllReview(user);
   }
 
-  @Post()
+  @Post('/:recipeId')
   @UsePipes(ValidationPipe)
   createReview(
     @Body() createReviewDto: CreateReviewDto,
     @GetUser() user: User,
+    @Param('recipeId') recipeId: number,
   ): Promise<Review> {
-    return this.reviewService.createReview(createReviewDto, user);
+    return this.reviewService.createReview(createReviewDto, user, recipeId);
   }
 
   @Get('/:reviewId')
