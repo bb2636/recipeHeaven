@@ -21,7 +21,7 @@ import { User } from 'src/auth/user.entity';
 import { Sub } from 'src/sub-category/sub-category.entity';
 
 @Controller('recipes')
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
   //전체조회
