@@ -20,9 +20,6 @@ export class Sub extends BaseEntity {
   @ManyToOne((type) => Top, (top) => top.subs, { eager: false })
   top: Top;
 
-  @Column()
-  topCategoryId: number; // 외래키
-
   @OneToMany((type) => Recipe, (recipe) => recipe.sub, { eager: true })
   recipes: Recipe[];
 }

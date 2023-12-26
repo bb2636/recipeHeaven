@@ -3,17 +3,40 @@ import { SubRepository } from './sub-category.repository';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Top } from 'src/top-category/top-category.entity';
 
 @Injectable()
-export class SubCategoryService {
-  constructor(private readonly subRepository: SubRepository) {}
+export class SubService {
+  constructor(
+    @InjectRepository(Sub)
+    private subRepository: Repository<Sub>,
+    @InjectRepository(Top)
+    private topRepository: Repository<Top>,
+  ) {}
 
   async getAllCategory(): Promise<Sub[]> {
     return this.subRepository.find();
   }
 
-  createSub(createSubDto: CreateSubDto): Promise<Sub> {
-    return this.subRepository.createSub(createSubDto);
+  async createSub(createSubDto: CreateSubDto): Promise<Sub> {
+    const { topCategoryId, ...subDto } = createSubDto;
+
+    const top = await this.topRepository.findOneBy({ topCategoryId });
+
+    if (!top) {
+      throw new NotFoundException(
+        `Can't find Top Category with id ${topCategoryId}`,
+      );
+    }
+
+    const sub = this.subRepository.create({
+      ...subDto,
+      top,
+    });
+
+    return this.subRepository.save(sub);
   }
   async getSubById(subCategoryId: number): Promise<Sub> {
     const subCategory = await this.subRepository.findOneBy({ subCategoryId });
@@ -38,16 +61,18 @@ export class SubCategoryService {
     updateSubDto: UpdateSubDto,
     topCategoryId: number,
   ): Promise<Sub> {
-    const subCategory = await this.subRepository.update(
-      { subCategoryId },
-      { ...updateSubDto, topCategoryId },
-    );
-
-    if (subCategory.affected === 0) {
+    const top = await this.topRepository.findOneBy({ topCategoryId });
+    if (!top) {
       throw new NotFoundException(
-        `Can't find Category with id ${subCategoryId}`,
+        `Can't find Top Category with id ${topCategoryId}`,
       );
     }
+
+    await this.subRepository.update(subCategoryId, {
+      ...updateSubDto,
+      top,
+    });
+
     return this.getSubById(subCategoryId);
   }
 }
