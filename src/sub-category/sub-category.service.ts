@@ -16,11 +16,11 @@ export class SubService {
     return this.subRepository.find();
   }
 
-  async createSub(createSubDto: CreateSubDto): Promise<Sub> {
-    const { topCategoryId, ...subDto } = createSubDto;
-
+  async createSub(
+    topCategoryId: number,
+    createSubDto: CreateSubDto,
+  ): Promise<Sub> {
     const top = await this.topRepository.findOneBy({ topCategoryId });
-
     if (!top) {
       throw new NotFoundException(
         `Can't find Top Category with id ${topCategoryId}`,
@@ -28,7 +28,7 @@ export class SubService {
     }
 
     const sub = this.subRepository.create({
-      ...subDto,
+      ...createSubDto,
       top,
     });
 
