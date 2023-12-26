@@ -41,7 +41,6 @@ export class RecipeController {
     @Body() createRecipeDto: CreateRecipeDto,
     @Param() sub: Sub,
     @GetUser() user: User,
-    @Body() sub: Sub,
   ): Promise<Recipe> {
     return this.recipeService.createRecipe(createRecipeDto, user, sub);
   }
