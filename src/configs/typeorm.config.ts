@@ -1,10 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
-// import { Board } from 'src/boards/board.entity';
-import { Recipe } from 'src/recipe/recipe.entity';
-import { Review } from 'src/review/review.entity';
-import { Sub } from 'src/sub-category/sub-category.entity';
-import { Top } from 'src/top-category/top-category.entity';
+import { Board } from 'src/boards/board.entity';
 
 // export const typeORMConfig: TypeOrmModuleOptions = {
 //   type: 'mysql',
@@ -27,14 +23,14 @@ function ormConfig(): TypeOrmModuleOptions {
 
   return {
     type: 'mysql',
-    database: 'recipeheaven',
-    host: 'recipeheaven.cj4yc4iiculk.ap-northeast-2.rds.amazonaws.com',
+    database: 'board_app',
+    host: 'localhost',
     port: Number(3306),
-    username: 'admin',
+    username: 'root',
     password: 'qkseltqnfdl1',
     logging: true,
     synchronize: commonConf.SYNCRONIZE,
-    entities: [Recipe, User, Review, Sub, Top],
+    entities: [Board, User],
     migrations: commonConf.MIGRATIONS,
     migrationsRun: commonConf.MIGRATIONS_RUN,
   };

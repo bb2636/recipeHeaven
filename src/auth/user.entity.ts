@@ -1,11 +1,8 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import { Recipe } from 'src/recipe/recipe.entity';
-import { Review } from 'src/review/review.entity';
 import {
   BaseEntity,
   Column,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -15,23 +12,17 @@ export enum UserRole {
 }
 
 @Entity()
-@Unique(['nickname', 'email'])
+@Unique(['username'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  Id: number;
+  id: number;
 
   @Column()
-  email: string;
-
-  @Column()
-  password: string;
+  username: string;
 
   @Column()
   @IsNotEmpty()
-  nickname: string;
-
-  @Column()
-  profilePicture: string;
+  password: string;
 
   @Column({
     type: 'enum',
@@ -40,9 +31,8 @@ export class User extends BaseEntity {
   })
   role: UserRole;
 
-  @OneToMany((type) => Recipe, (recipe) => recipe.user, { eager: true })
-  recipes: Recipe[];
-
-  @OneToMany((type) => Review, (review) => review.user, { eager: true })
-  reviews: Review[];
+  @Column()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }
