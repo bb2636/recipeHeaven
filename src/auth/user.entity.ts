@@ -30,6 +30,9 @@ export class User extends BaseEntity {
   @Column()
   profilePicture: string;
 
+  @Column()
+  password: string;
+
   @Column({
     type: 'enum',
     enum: UserRole,

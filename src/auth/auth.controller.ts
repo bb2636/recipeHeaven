@@ -26,14 +26,14 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/login/kakao')
-  async login(@Body() body: any, @Response() res): Promise<any> {
+  async auth(@Body() body: any, @Response() res): Promise<any> {
     try {
       const { code, domain } = body;
 
       if (!code || !domain) {
         throw new BadRequestException('카카오 정보가 없습니다.');
       }
-      const kakao = await this.authService.kakaoLogin({ code, domain });
+      const kakao = await this.authService.login({ code, domain });
 
       if (!kakao.id) {
         throw new BadRequestException('카카오 정보가 없습니다.');
@@ -55,18 +55,46 @@ export class AuthController {
     return this.authService.signUp(authCredentialsDto);
   }
 
+  @Post('/signin')
+  signin(@Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto) {
+    return this.authService.signIn(authCredentialsDto);
+  }
+
   @Get('/:id')
-  getBoardById(@Param('userId') userId: number): Promise<User> {
+  getUserById(@Param('userId') userId: number): Promise<User> {
     return this.authService.getUserById(userId);
   }
 
   @Patch('/:userId/status')
-  updateBoardStatus(
+  updateUserStatus(
     @Param('userId', ParseIntPipe) userId: number,
     @Body('nickname') nickname: string,
   ) {
     return this.authService.updateUser(userId, nickname);
   }
+
+  // @Post('/login/kko')
+  // async login(@Body() body: any, @Response() res) {
+  //   try {
+  //     const { code, domain } = body;
+
+  //     if (!code) {
+  //       throw new BadRequestException('카카오 정보가 없습니다.');
+  //     }
+  //     const kakao = await this.authService.login({ code, domain });
+
+  //     if (!kakao.id) {
+  //       throw new BadRequestException('카카오 정보가 없습니다.');
+  //     }
+
+  //     res.send({
+  //       user: kakao,
+  //       message: 'success',
+  //     });
+  //   } catch (e) {
+  //     throw new UnauthorizedException();
+  //   }
+  // }
 
   @Post('/authTest')
   @UseGuards(AuthGuard())
