@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 import { SubCategoryController } from './sub-category.controller';
-import { SubCategoryService } from './sub-category.service';
+import { SubService } from './sub-category.service';
 import { TopCategoryModule } from 'src/top-category/top-category.module';
 import { Sub } from './sub-category.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubRepository } from './sub-category.repository';
+import { TopRepository } from 'src/top-category/top-category.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Sub]), TopCategoryModule],
+  imports: [TypeOrmModule.forFeature([Sub, TopRepository]), TopCategoryModule],
   controllers: [SubCategoryController],
-  providers: [SubCategoryService, SubRepository],
+  providers: [SubService, SubRepository],
 })
 export class SubCategoryModule {}

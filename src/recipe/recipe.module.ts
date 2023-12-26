@@ -17,5 +17,6 @@ import { PassportModule } from '@nestjs/passport';
   ],
   controllers: [RecipeController],
   providers: [RecipeService, RecipeRepository],
+  exports: [RecipeRepository],
 })
 export class RecipeModule {}

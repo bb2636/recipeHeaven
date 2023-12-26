@@ -5,10 +5,14 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { User } from 'src/auth/user.entity';
 import { DeleteReviewDto } from './dto/delete-review.dto';
+import { RecipeRepository } from 'src/recipe/recipe.repository';
 
 @Injectable()
 export class ReviewService {
-  constructor(private readonly reviewRepositoty: ReviewRepository) {}
+  constructor(
+    private readonly reviewRepositoty: ReviewRepository,
+    private readonly recipeRepository: RecipeRepository,
+  ) {}
 
   async getAllReview(): Promise<Review[]> {
     return this.reviewRepositoty.find();
@@ -21,8 +25,30 @@ export class ReviewService {
     return reviews;
   }
 
-  createReview(createReviewDto: CreateReviewDto, user: User): Promise<Review> {
-    return this.reviewRepositoty.createReview(createReviewDto, user);
+  async createReview(
+    createReviewDto: CreateReviewDto,
+    user: User,
+    recipeId: number,
+  ): Promise<Review> {
+    const { star, comment } = createReviewDto;
+
+    const recipe = await this.recipeRepository.findOneBy({ recipeId });
+
+    if (!recipe) {
+      throw new NotFoundException(
+        `ID가 ${recipeId}인 레시피를 찾을 수 없습니다.`,
+      );
+    }
+
+    const review = this.reviewRepositoty.create({
+      star,
+      comment,
+      user,
+      recipe,
+    });
+
+    await this.reviewRepositoty.save(review);
+    return review;
   }
 
   async getReviewById(reviewId: number): Promise<Review> {
