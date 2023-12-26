@@ -55,17 +55,17 @@ export class AuthController {
     return this.authService.signUp(authCredentialsDto);
   }
 
-  @Get('/:id')
-  getBoardById(@Param('userId') userId: number): Promise<User> {
+  @Get('/:Id')
+  getUserById(@Param('Id') userId: number): Promise<User> {
     return this.authService.getUserById(userId);
   }
 
-  @Patch('/:userId/status')
-  updateBoardStatus(
-    @Param('userId', ParseIntPipe) userId: number,
+  @Patch('/:Id/status')
+  updateUserStatus(
+    @Param('Id', ParseIntPipe) Id: number,
     @Body('nickname') nickname: string,
   ) {
-    return this.authService.updateUser(userId, nickname);
+    return this.authService.updateUser(Id, nickname);
   }
 
   @Post('/authTest')

@@ -18,4 +18,6 @@ export class AuthCredentialsDto {
 
   @IsString()
   profilePicture: string;
+
+  password: string;
 }
