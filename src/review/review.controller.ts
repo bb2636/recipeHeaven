@@ -38,19 +38,25 @@ export class ReviewController {
   createReview(
     @Body() createReviewDto: CreateReviewDto,
     @GetUser() user: User,
-    @Param('recipeId') recipeId: number,
+    @Param('recipeId', ParseIntPipe) recipeId: string,
   ): Promise<Review> {
-    return this.reviewService.createReview(createReviewDto, user, recipeId);
+    return this.reviewService.createReview(
+      createReviewDto,
+      user,
+      parseInt(recipeId),
+    );
   }
 
   @Get('/:reviewId')
-  getReviewById(@Param('reviewId') reviewId: number): Promise<Review> {
+  getReviewById(
+    @Param('reviewId', ParseIntPipe) reviewId: number,
+  ): Promise<Review> {
     return this.reviewService.getReviewById(reviewId);
   }
 
   @Patch('/:reviewId')
   updateReview(
-    @Param('reviewId') reviewId: number,
+    @Param('reviewId', ParseIntPipe) reviewId: number,
     @Body() reviewData: UpdateReviewDto,
   ): Promise<Review> {
     return this.reviewService.updateReview(reviewId, reviewData);

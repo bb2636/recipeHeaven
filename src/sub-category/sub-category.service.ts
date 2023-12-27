@@ -28,8 +28,8 @@ export class SubService {
     }
 
     const sub = this.subRepository.create({
-      ...createSubDto,
       top,
+      ...createSubDto,
     });
 
     return this.subRepository.save(sub);

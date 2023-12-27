@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateSubDto {
@@ -5,5 +6,6 @@ export class CreateSubDto {
   subCategoryType: string;
 
   @IsNumber()
-  topCategoryId: number;
+  @Type(() => Number)
+  readonly topCategoryId: number;
 }

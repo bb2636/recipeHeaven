@@ -46,7 +46,9 @@ export class RecipeController {
   }
   //레시피 상세 조회
   @Get('/:recipeId')
-  getRecipeById(@Param('recipeId') recipeId: number): Promise<Recipe> {
+  getRecipeById(
+    @Param('recipeId', ParseIntPipe) recipeId: number,
+  ): Promise<Recipe> {
     return this.recipeService.getRecipeById(recipeId);
   }
   //레시피 삭제(id일치)
@@ -60,7 +62,7 @@ export class RecipeController {
   //레시피 수정(id일치)
   @Patch('/:recipeId')
   updateRecipe(
-    @Param('recipeId') recipeId: number,
+    @Param('recipeId', ParseIntPipe) recipeId: number,
     @Body() recipeData: UpdateRecipeDto,
   ): Promise<Recipe> {
     return this.recipeService.updateRecipe(recipeId, recipeData);

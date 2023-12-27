@@ -19,7 +19,6 @@ export class Sub extends BaseEntity {
   subCategoryType: string;
 
   @ManyToOne((type) => Top, (top) => top.subs, { eager: false })
-  @JoinColumn({ name: 'topCategoryId' })
   top: Top;
 
   @OneToMany((type) => Recipe, (recipe) => recipe.sub, { eager: true })

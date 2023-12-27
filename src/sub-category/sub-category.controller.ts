@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,29 +23,36 @@ export class SubCategoryController {
     return this.subService.getAllCategory();
   }
   @Get('/:subCategoryId')
-  getSubById(@Param('subCategoryId') subCategoryId: number): Promise<Sub> {
+  getSubById(
+    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
+  ): Promise<Sub> {
     return this.subService.getSubById(subCategoryId);
   }
 
   @Post('/:topCategoryId')
   createSub(
-    @Param('topCategoryId') topCategoryId: number,
+    @Param('topCategoryId', ParseIntPipe) topCategoryId: string,
     @Body() createSubDto: CreateSubDto,
   ): Promise<Sub> {
-    return this.subService.createSub(topCategoryId, createSubDto);
+    const parseIntTopId = parseInt(topCategoryId);
+    if (isNaN(parseIntTopId)) {
+      throw new BadRequestException('Invalid topCategoryId');
+    }
+    return this.subService.createSub(parseIntTopId, createSubDto);
   }
 
   @Patch('/:subCategoryId')
   updateSub(
-    @Param('subCategoryId') subCategoryId: number,
-    topCategoryId: number,
+    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
+    @Param('topCategoryId', ParseIntPipe) topCategoryId: string,
     @Body() subData: UpdateSubDto,
   ): Promise<Sub> {
-    return this.subService.updateSub(subCategoryId, subData, topCategoryId);
+    const parseIntTopId = parseInt(topCategoryId);
+    return this.subService.updateSub(subCategoryId, subData, parseIntTopId);
   }
   @Delete('/:subCategoryId')
   deleteSub(
-    @Param('subCategoryId', ParseIntPipe) subCategoryId,
+    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
   ): Promise<void> {
     return this.subService.deleteSub(subCategoryId);
   }
