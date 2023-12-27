@@ -20,7 +20,7 @@ export class RecipeService {
     const recipes = await query.getMany();
     return recipes;
   }
-  createRecipe(
+  async createRecipe(
     createRecipeDto: CreateRecipeDto,
     user: User,
     sub: Sub,

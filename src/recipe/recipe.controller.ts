@@ -26,18 +26,18 @@ export class RecipeController {
   constructor(private recipeService: RecipeService) {}
   //전체조회
   @Get()
-  getAllRecipe(): Promise<Recipe[]> {
+  async getAllRecipe(): Promise<Recipe[]> {
     return this.recipeService.getAllRecipe();
   }
   //한 유저가 등록한 전체 레시피
   @Get()
-  getUserAllRecipe(@GetUser() user: User): Promise<Recipe[]> {
+  async getUserAllRecipe(@GetUser() user: User): Promise<Recipe[]> {
     return this.recipeService.getUserAllRecipe(user);
   }
   //유저 정보 포함한 등록
   @Post()
   @UsePipes(ValidationPipe)
-  createRecipe(
+  async createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
     @Param() sub: Sub,
     @GetUser() user: User,
@@ -46,14 +46,14 @@ export class RecipeController {
   }
   //레시피 상세 조회
   @Get('/:recipeId')
-  getRecipeById(
+  async getRecipeById(
     @Param('recipeId', ParseIntPipe) recipeId: number,
   ): Promise<Recipe> {
     return this.recipeService.getRecipeById(recipeId);
   }
   //레시피 삭제(id일치)
   @Delete('/:recipeId')
-  deleteRecipe(
+  async deleteRecipe(
     @Param('recipeId', ParseIntPipe) recipeId,
     @GetUser() user: User,
   ): Promise<void> {
@@ -61,7 +61,7 @@ export class RecipeController {
   }
   //레시피 수정(id일치)
   @Patch('/:recipeId')
-  updateRecipe(
+  async updateRecipe(
     @Param('recipeId', ParseIntPipe) recipeId: number,
     @Body() recipeData: UpdateRecipeDto,
   ): Promise<Recipe> {

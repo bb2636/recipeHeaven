@@ -10,7 +10,6 @@ export class SubRepository extends Repository<Sub> {
   async createSub(createSubDto: CreateSubDto): Promise<Sub> {
     const { subCategoryType, topCategoryId } = createSubDto;
     const sub = this.create({ subCategoryType, top: { topCategoryId } });
-    await this.save(sub);
-    return sub;
+    return await this.save(sub);
   }
 }

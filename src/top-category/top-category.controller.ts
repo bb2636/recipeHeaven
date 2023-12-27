@@ -4,7 +4,6 @@ import {
   Body,
   Delete,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -18,32 +17,32 @@ export class TopCategoryController {
   constructor(private topService: TopCategoryService) {}
 
   @Get()
-  getAllCategory(): Promise<Top[]> {
+  async getAllCategory(): Promise<Top[]> {
     return this.topService.getAllCategory();
   }
   @Get('/:topCategoryId')
-  getTopById(
-    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
+  async getTopById(
+    @Param('topCategoryId') topCategoryId: string,
   ): Promise<Top> {
-    return this.topService.getTopById(topCategoryId);
+    return this.topService.getTopById(parseInt(topCategoryId));
   }
 
   @Post()
-  createTop(@Body() createTopDto: CreateTopDto): Promise<Top> {
+  async createTop(@Body() createTopDto: CreateTopDto): Promise<Top> {
     return this.topService.createTop(createTopDto);
   }
 
   @Patch('/:topCategoryId')
-  updateReview(
-    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
+  async updateReview(
+    @Param('topCategoryId') topCategoryId: string,
     @Body() topData: UpdateTopDto,
   ): Promise<Top> {
-    return this.topService.updateTop(topCategoryId, topData);
+    return this.topService.updateTop(parseInt(topCategoryId), topData);
   }
   @Delete('/:topCategoryId')
-  deleteReview(
-    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
+  async deleteReview(
+    @Param('topCategoryId') topCategoryId: string,
   ): Promise<void> {
-    return this.topService.deleteTop(topCategoryId);
+    return this.topService.deleteTop(parseInt(topCategoryId));
   }
 }

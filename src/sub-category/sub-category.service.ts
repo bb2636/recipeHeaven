@@ -27,12 +27,7 @@ export class SubService {
       );
     }
 
-    const sub = this.subRepository.create({
-      top,
-      ...createSubDto,
-    });
-
-    return this.subRepository.save(sub);
+    return this.subRepository.createSub(createSubDto);
   }
   async getSubById(subCategoryId: number): Promise<Sub> {
     const subCategory = await this.subRepository.findOneBy({ subCategoryId });
@@ -57,12 +52,8 @@ export class SubService {
     updateSubDto: UpdateSubDto,
     topCategoryId: number,
   ): Promise<Sub> {
-    const subCategory = await this.subRepository.update(
-      { subCategoryId },
-      { ...updateSubDto, topCategoryId },
-    );
-
-    if (subCategory.affected === 0) {
+    const top = await this.topRepository.findOneBy({ topCategoryId });
+    if (!top) {
       throw new NotFoundException(
         `Can't find Top Category with id ${topCategoryId}`,
       );

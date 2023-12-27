@@ -12,7 +12,7 @@ export class TopCategoryService {
     return this.topRepository.find();
   }
 
-  createTop(createTopDto: CreateTopDto): Promise<Top> {
+  async createTop(createTopDto: CreateTopDto): Promise<Top> {
     return this.topRepository.createTop(createTopDto);
   }
   async getTopById(topCategoryId: number): Promise<Top> {

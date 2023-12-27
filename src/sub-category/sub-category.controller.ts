@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
 } from '@nestjs/common';
@@ -19,41 +18,38 @@ export class SubCategoryController {
   constructor(private subService: SubService) {}
 
   @Get()
-  getAllCategory(): Promise<Sub[]> {
+  async getAllCategory(): Promise<Sub[]> {
     return this.subService.getAllCategory();
   }
   @Get('/:subCategoryId')
-  getSubById(
-    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
+  async getSubById(
+    @Param('subCategoryId') subCategoryId: string,
   ): Promise<Sub> {
-    return this.subService.getSubById(subCategoryId);
+    return this.subService.getSubById(parseInt(subCategoryId));
   }
 
-  @Post('/:topCategoryId')
-  createSub(
-    @Param('topCategoryId', ParseIntPipe) topCategoryId: string,
+  @Post()
+  async createSub(
+    @Param('topCategoryId') topCategoryId: string,
     @Body() createSubDto: CreateSubDto,
   ): Promise<Sub> {
-    const parseIntTopId = parseInt(topCategoryId);
-    if (isNaN(parseIntTopId)) {
-      throw new BadRequestException('Invalid topCategoryId');
-    }
-    return this.subService.createSub(parseIntTopId, createSubDto);
+    return this.subService.createSub(parseInt(topCategoryId), createSubDto);
   }
 
   @Patch('/:subCategoryId')
-  updateSub(
-    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
-    @Param('topCategoryId', ParseIntPipe) topCategoryId: string,
+  async updateSub(
+    @Param('subCategoryId') subCategoryId: string,
+    @Param('topCategoryId') topCategoryId: string,
     @Body() subData: UpdateSubDto,
   ): Promise<Sub> {
     const parseIntTopId = parseInt(topCategoryId);
-    return this.subService.updateSub(subCategoryId, subData, parseIntTopId);
+    const parseIntSubId = parseInt(subCategoryId);
+    return this.subService.updateSub(parseIntSubId, subData, parseIntTopId);
   }
   @Delete('/:subCategoryId')
-  deleteSub(
-    @Param('subCategoryId', ParseIntPipe) subCategoryId: number,
+  async deleteSub(
+    @Param('subCategoryId') subCategoryId: string,
   ): Promise<void> {
-    return this.subService.deleteSub(subCategoryId);
+    return this.subService.deleteSub(parseInt(subCategoryId));
   }
 }

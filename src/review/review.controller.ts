@@ -25,17 +25,17 @@ export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
   @Get()
-  getAllReview(): Promise<Review[]> {
+  async getAllReview(): Promise<Review[]> {
     return this.reviewService.getAllReview();
   }
   @Get()
-  getUserAllReview(@GetUser() user: User): Promise<Review[]> {
+  async getUserAllReview(@GetUser() user: User): Promise<Review[]> {
     return this.reviewService.getUserAllReview(user);
   }
 
   @Post('/:recipeId')
   @UsePipes(ValidationPipe)
-  createReview(
+  async createReview(
     @Body() createReviewDto: CreateReviewDto,
     @GetUser() user: User,
     @Param('recipeId', ParseIntPipe) recipeId: string,
@@ -48,14 +48,14 @@ export class ReviewController {
   }
 
   @Get('/:reviewId')
-  getReviewById(
+  async getReviewById(
     @Param('reviewId', ParseIntPipe) reviewId: number,
   ): Promise<Review> {
     return this.reviewService.getReviewById(reviewId);
   }
 
   @Patch('/:reviewId')
-  updateReview(
+  async updateReview(
     @Param('reviewId', ParseIntPipe) reviewId: number,
     @Body() reviewData: UpdateReviewDto,
   ): Promise<Review> {
@@ -63,7 +63,7 @@ export class ReviewController {
   }
 
   @Delete('/:reviewId')
-  deleteReview(
+  async deleteReview(
     @Param('reviewId', ParseIntPipe) reviewId,
     @GetUser() user: User,
   ): Promise<void> {
