@@ -3,17 +3,36 @@ import { SubRepository } from './sub-category.repository';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
 import { UpdateSubDto } from './dto/update-sub.dto';
+import { TopRepository } from 'src/top-category/top-category.repository';
 
 @Injectable()
-export class SubCategoryService {
-  constructor(private readonly subRepository: SubRepository) {}
+export class SubService {
+  constructor(
+    private readonly subRepository: SubRepository,
+    private readonly topRepository: TopRepository,
+  ) {}
 
   async getAllCategory(): Promise<Sub[]> {
     return this.subRepository.find();
   }
 
-  createSub(createSubDto: CreateSubDto): Promise<Sub> {
-    return this.subRepository.createSub(createSubDto);
+  async createSub(
+    topCategoryId: number,
+    createSubDto: CreateSubDto,
+  ): Promise<Sub> {
+    const top = await this.topRepository.findOneBy({ topCategoryId });
+    if (!top) {
+      throw new NotFoundException(
+        `Can't find Top Category with id ${topCategoryId}`,
+      );
+    }
+
+    const sub = this.subRepository.create({
+      top,
+      ...createSubDto,
+    });
+
+    return this.subRepository.save(sub);
   }
   async getSubById(subCategoryId: number): Promise<Sub> {
     const subCategory = await this.subRepository.findOneBy({ subCategoryId });
@@ -45,9 +64,15 @@ export class SubCategoryService {
 
     if (subCategory.affected === 0) {
       throw new NotFoundException(
-        `Can't find Category with id ${subCategoryId}`,
+        `Can't find Top Category with id ${topCategoryId}`,
       );
     }
+
+    await this.subRepository.update(subCategoryId, {
+      ...updateSubDto,
+      top,
+    });
+
     return this.getSubById(subCategoryId);
   }
 }

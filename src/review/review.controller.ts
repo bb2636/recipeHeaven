@@ -20,7 +20,7 @@ import { GetUser } from 'src/auth/get-user-decorator';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reviews')
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 
@@ -33,23 +33,30 @@ export class ReviewController {
     return this.reviewService.getUserAllReview(user);
   }
 
-  @Post()
+  @Post('/:recipeId')
   @UsePipes(ValidationPipe)
   createReview(
     @Body() createReviewDto: CreateReviewDto,
     @GetUser() user: User,
+    @Param('recipeId', ParseIntPipe) recipeId: string,
   ): Promise<Review> {
-    return this.reviewService.createReview(createReviewDto, user);
+    return this.reviewService.createReview(
+      createReviewDto,
+      user,
+      parseInt(recipeId),
+    );
   }
 
   @Get('/:reviewId')
-  getReviewById(@Param('reviewId') reviewId: number): Promise<Review> {
+  getReviewById(
+    @Param('reviewId', ParseIntPipe) reviewId: number,
+  ): Promise<Review> {
     return this.reviewService.getReviewById(reviewId);
   }
 
   @Patch('/:reviewId')
   updateReview(
-    @Param('reviewId') reviewId: number,
+    @Param('reviewId', ParseIntPipe) reviewId: number,
     @Body() reviewData: UpdateReviewDto,
   ): Promise<Review> {
     return this.reviewService.updateReview(reviewId, reviewData);

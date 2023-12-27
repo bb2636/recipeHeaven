@@ -15,17 +15,20 @@ export enum UserRole {
 }
 
 @Entity()
-@Unique(['username'])
+@Unique(['nickname', 'email'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  Id: number;
 
   @Column()
-  username: string;
+  email: string;
 
   @Column()
   @IsNotEmpty()
-  password: string;
+  nickname: string;
+
+  @Column()
+  profilePicture: string;
 
   @Column({
     type: 'enum',
@@ -33,11 +36,6 @@ export class User extends BaseEntity {
     default: UserRole.User,
   })
   role: UserRole;
-
-  @Column()
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
 
   @OneToMany((type) => Recipe, (recipe) => recipe.user, { eager: true })
   recipes: Recipe[];

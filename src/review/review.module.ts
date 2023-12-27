@@ -7,13 +7,14 @@ import { AuthModule } from 'src/auth/auth.module';
 import { Review } from './review.entity';
 import { ReviewRepository } from './review.repositoy';
 import { PassportModule } from '@nestjs/passport';
+import { RecipeRepository } from 'src/recipe/recipe.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Review]),
+    TypeOrmModule.forFeature([Review, RecipeRepository]),
     AuthModule,
     RecipeModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [ReviewController],
   providers: [ReviewService, ReviewRepository],

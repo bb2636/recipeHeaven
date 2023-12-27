@@ -13,9 +13,10 @@ import { PassportModule } from '@nestjs/passport';
     TypeOrmModule.forFeature([Recipe]),
     AuthModule,
     SubCategoryModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [RecipeController],
   providers: [RecipeService, RecipeRepository],
+  exports: [RecipeRepository],
 })
 export class RecipeModule {}

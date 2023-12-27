@@ -22,7 +22,9 @@ export class TopCategoryController {
     return this.topService.getAllCategory();
   }
   @Get('/:topCategoryId')
-  getTopById(@Param('topCategoryId') topCategoryId: number): Promise<Top> {
+  getTopById(
+    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
+  ): Promise<Top> {
     return this.topService.getTopById(topCategoryId);
   }
 
@@ -33,14 +35,14 @@ export class TopCategoryController {
 
   @Patch('/:topCategoryId')
   updateReview(
-    @Param('topCategoryId') topCategoryId: number,
+    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
     @Body() topData: UpdateTopDto,
   ): Promise<Top> {
     return this.topService.updateTop(topCategoryId, topData);
   }
   @Delete('/:topCategoryId')
   deleteReview(
-    @Param('topCategoryId', ParseIntPipe) topCategoryId,
+    @Param('topCategoryId', ParseIntPipe) topCategoryId: number,
   ): Promise<void> {
     return this.topService.deleteTop(topCategoryId);
   }

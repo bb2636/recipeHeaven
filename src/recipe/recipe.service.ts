@@ -5,6 +5,7 @@ import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { User } from 'src/auth/user.entity';
 import { DeleteRecipeDto } from './dto/delete-recipe.dto';
+import { Sub } from 'src/sub-category/sub-category.entity';
 
 @Injectable()
 export class RecipeService {
@@ -15,12 +16,16 @@ export class RecipeService {
   }
   async getUserAllRecipe(user: User): Promise<Recipe[]> {
     const query = this.recipeRepository.createQueryBuilder('recipe');
-    query.where('recipe.userId = : userId', { userId: user.id });
+    query.where('recipe.userId = : userId', { userId: user.Id });
     const recipes = await query.getMany();
     return recipes;
   }
-  createRecipe(createRecipeDto: CreateRecipeDto, user: User): Promise<Recipe> {
-    return this.recipeRepository.createRecipe(createRecipeDto, user);
+  createRecipe(
+    createRecipeDto: CreateRecipeDto,
+    user: User,
+    sub: Sub,
+  ): Promise<Recipe> {
+    return this.recipeRepository.createRecipe(createRecipeDto, user, sub);
   }
   async getRecipeById(recipeId: number): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneBy({ recipeId });
@@ -34,7 +39,7 @@ export class RecipeService {
     const { recipeId, user } = deleteRecipeDto;
     const recipe = await this.recipeRepository.delete({
       recipeId,
-      user: { id: user.id },
+      user: { Id: user.Id },
     });
 
     if (recipe.affected === 0) {
