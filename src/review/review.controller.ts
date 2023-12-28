@@ -20,7 +20,7 @@ import { GetUser } from 'src/auth/get-user-decorator';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('reviews')
-// @UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 export class ReviewController {
   constructor(private reviewService: ReviewService) {}
 

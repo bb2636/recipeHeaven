@@ -8,8 +8,8 @@ import {
 } from 'class-validator';
 
 export class AuthCredentialsDto {
-  @IsNumber()
-  Id: number;
+  // @IsNumber()
+  // Id: number;
 
   @IsString()
   @IsEmail()
@@ -23,8 +23,8 @@ export class AuthCredentialsDto {
   @IsString()
   profilePicture: string;
 
-  @IsString()
-  @MinLength(6)
-  @MaxLength(20)
-  password: string;
+  //   @IsString()
+  //   @MinLength(6)
+  //   @MaxLength(20)
+  //   password: string;
 }

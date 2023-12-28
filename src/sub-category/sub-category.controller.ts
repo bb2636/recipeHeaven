@@ -7,13 +7,16 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { SubService } from './sub-category.service';
 import { UpdateSubDto } from './dto/update-sub.dto';
 import { Sub } from './sub-category.entity';
 import { CreateSubDto } from './dto/create-sub.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('sub-categorys')
+@UseGuards(AuthGuard())
 export class SubCategoryController {
   constructor(private subService: SubService) {}
 

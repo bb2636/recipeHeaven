@@ -7,13 +7,16 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { TopCategoryService } from './top-category.service';
 import { Top } from './top-category.entity';
 import { CreateTopDto } from './dto/create-top.dto';
 import { UpdateTopDto } from './dto/update-top.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('top-categorys')
+@UseGuards(AuthGuard())
 export class TopCategoryController {
   constructor(private topService: TopCategoryService) {}
 

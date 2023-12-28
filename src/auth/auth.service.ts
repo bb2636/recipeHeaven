@@ -10,94 +10,100 @@ import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import * as bcrypt from 'bcryptjs';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import * as jwt from 'jsonwebtoken';
+import { AuthLoginDto } from './dto/auth-login.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  // async kakaoLogin(param: { code: string; domain: string }): Promise<any> {
-  //   const { code, domain } = param;
-  //   const kakaoKey = 'f0f5c0502b3bb5ec7080c7b64a6d18ce';
-  //   const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
-  //   // const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
+  async kakaoLogin(param: { code: string; domain: string }): Promise<any> {
+    const { code, domain } = param;
+    const kakaoKey = 'f0f5c0502b3bb5ec7080c7b64a6d18ce';
+    const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
+    // const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
 
-  //   const body = {
-  //     grant_type: 'authorization_code',
-  //     client_id: kakaoKey,
-  //     redirect_uri: `http://localhost:5173/oauth`,
-  //     code,
-  //   };
-  //   // const headers = {
-  //   //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-  //   // };
+    const body = {
+      grant_type: 'authorization_code',
+      client_id: kakaoKey,
+      redirect_uri: `http://localhost:5173/oauth`,
+      code,
+    };
+    // const headers = {
+    //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    // };
 
-  //   console.log(body);
+    console.log(body);
 
-  //   try {
-  //     const response = await axios.post(
-  //       'https://kauth.kakao.com/oauth/token',
-  //       {
-  //         grant_type: 'authorization_code',
-  //         client_id: kakaoKey,
-  //         redirect_uri: `http://localhost:5173/oauth`,
-  //         code,
-  //       },
-  //       {
-  //         headers: {
-  //           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-  //         },
-  //       },
-  //     );
+    try {
+      const response = await axios.post(
+        'https://kauth.kakao.com/oauth/token',
+        {
+          grant_type: 'authorization_code',
+          client_id: kakaoKey,
+          redirect_uri: `http://localhost:5173/oauth`,
+          code,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+          },
+        },
+      );
 
-  //     console.log(response);
+      console.log(response);
 
-  //     if (response.status === 200) {
-  //       console.log(`kakaoToken : ${JSON.stringify(response.data)}`);
+      if (response.status === 200) {
+        console.log(`kakaoToken : ${JSON.stringify(response.data)}`);
 
-  //       const headerUserInfo = {
-  //         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-  //         Authorization: 'Bearer' + response.data.accessToken,
-  //       };
-  //       console.log(`url : ${kakaoTokenUrl}`);
-  //       console.log(`headers : ${JSON.stringify(headerUserInfo)}`);
+        const headerUserInfo = {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+          Authorization: 'Bearer' + response.data.accessToken,
+        };
+        console.log(`url : ${kakaoTokenUrl}`);
+        console.log(`headers : ${JSON.stringify(headerUserInfo)}`);
 
-  //       const kakaoUserInfo = await axios.get(
-  //         'https://kapi.kakao.com/v2/user/me',
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${response.data.access_token}`,
-  //           },
-  //         },
-  //       );
+        const kakaoUserInfo = await axios.get(
+          'https://kapi.kakao.com/v2/user/me',
+          {
+            headers: {
+              Authorization: `Bearer ${response.data.access_token}`,
+            },
+          },
+        );
+        console.log(`responseUserInfo.status : ${kakaoUserInfo.status}`);
+        if (kakaoUserInfo.status === 200) {
+          console.log(`kakaoUserInfo : ${JSON.stringify(kakaoUserInfo.data)}`);
+          return kakaoUserInfo.data;
+        } else {
+          throw new UnauthorizedException();
+        }
+      } else {
+        throw new UnauthorizedException();
+      }
+    } catch (e) {
+      console.log(e);
+      throw new UnauthorizedException();
+    }
+  }
 
-  //       console.log(`responseUserInfo.status : ${kakaoUserInfo.status}`);
-  //       if (kakaoUserInfo.status === 200) {
-  //         console.log(`kakaoUserInfo : ${JSON.stringify(kakaoUserInfo.data)}`);
-  //         return kakaoUserInfo.data;
-  //       } else {
-  //         throw new UnauthorizedException();
-  //       }
-  //     } else {
-  //       throw new UnauthorizedException();
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //     throw new UnauthorizedException();
-  //   }
-  // }
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+    await this.userRepository.createUser(authCredentialsDto);
+  }
 
-  // async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-  //   this.userRepository.createUser(authCredentialsDto);
-  // }
-
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<string> {
-    const { email, password } = authCredentialsDto;
+  async signIn(authLoginDto: AuthLoginDto): Promise<{ accessToken: string }> {
+    const { email } = authLoginDto;
     const user = await this.userRepository.findOneBy({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return 'login success';
+    if (user && email) {
+      const payload = { email };
+      const accessToken = await this.jwtService.sign(payload);
+
+      return { accessToken };
     } else {
       throw new UnauthorizedException('login failed');
     }
@@ -114,10 +120,22 @@ export class AuthService {
 
   async getUserById(Id: number): Promise<User> {
     const found = await this.userRepository.findOneBy({ Id });
-
+    console.log(Id);
     if (!found) {
       throw new NotFoundException(`ID가 ${Id}인 유저를 찾을 수 없습니다.`);
     }
+
+    return found;
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    const found = await this.userRepository.findOneBy({ email });
+
+    // if (!found) {
+    //   throw new NotFoundException(
+    //     `email이 ${email}인 유저를 찾을 수 없습니다.`,
+    //   );
+    // }
 
     return found;
   }
@@ -156,44 +174,55 @@ export class AuthService {
       },
     });
 
-    console.log('user', user);
+    // console.log('user', user);
 
     const userData = {
       Id: user.data.id,
       nickname: user.data.kakao_account.profile.nickname,
       email: user.data.kakao_account.email,
+      profilePicture: user.data.properties.profile_image,
+      // password: user.data.kakao_account.password,
     };
 
-    console.log(userData);
+    // console.log(userData);
 
-    let checkUser = await this.findUserByKakaoId(userData.Id);
-    console.log('checkUser', checkUser);
+    const checkUser = await this.getUserByEmail(userData.email);
+    // console.log('checkUser', checkUser);
 
-    if (!checkUser) {
-      checkUser = await this.createUser(userData);
-    } else if (checkUser !== null) {
-      // Handle case where user exists but is "soft deleted"
-      await this.restoreUser(checkUser.Id);
-      checkUser = await this.findUserByKakaoId(userData.Id);
-    }
+    const signUpUser = await this.userRepository.createUser({
+      // Id: userData.Id,
+      nickname: userData.nickname,
+      email: userData.email,
+      profilePicture: userData.profilePicture,
+      // password: userData.password,
+    });
+    // console.log('signUpUser', signUpUser);
+
+    // if (!checkUser) {
+    //   await this.signUp(userData);
+    // } else if (checkUser !== null) {
+    //   // Handle case where userexists but is "soft deleted"
+    //   await this.restoreUser(checkUser.Id);
+    //   checkUser = await this.findUserByKakaoId(userData.email);
+    // }
 
     const jwtToken = this.generateJWTToken(checkUser);
     console.log('jwtToken', jwtToken);
     return jwtToken;
   }
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    this.userRepository.createUser(authCredentialsDto);
-  }
+  // async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  //   this.userRepository.createUser(authCredentialsDto);
+  // }
 
-  private async findUserByKakaoId(Id: number): Promise<User | null> {
+  private async findUserByKakaoId(Id: number): Promise<User> {
     return await this.userRepository.findOne({ where: { Id } });
   }
 
-  // Create new user
-  private async createUser(userData: any): Promise<User> {
-    return await this.userRepository.createUser(userData);
-  }
+  // // Create new user
+  // private async createUser(userData: any): Promise<User> {
+  //   return await this.userRepository.createUser(userData);
+  // }
 
   // Restore user (soft delete revert)
   private async restoreUser(Id: number): Promise<void> {
