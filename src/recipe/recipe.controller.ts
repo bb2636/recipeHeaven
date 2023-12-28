@@ -18,11 +18,11 @@ import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
-import { Sub } from 'src/sub-category/sub-category.entity';
+// import { Sub } from 'src/sub-category/sub-category.entity';
 import { DeleteRecipeDto } from './dto/delete-recipe.dto';
 
 @Controller('recipes')
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
   //전체조회
@@ -40,10 +40,9 @@ export class RecipeController {
   @UsePipes(ValidationPipe)
   createRecipe(
     @Body() createRecipeDto: CreateRecipeDto,
-    @Param() sub: Sub,
     @GetUser() user: User,
   ): Promise<Recipe> {
-    return this.recipeService.createRecipe(createRecipeDto, user, sub);
+    return this.recipeService.createRecipe(createRecipeDto, user);
   }
   //레시피 상세 조회
   @Get('/:recipeId')

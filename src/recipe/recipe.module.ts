@@ -5,14 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Recipe } from './recipe.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { RecipeRepository } from './recipe.repository';
-import { SubCategoryModule } from 'src/sub-category/sub-category.module';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Recipe]),
     AuthModule,
-    SubCategoryModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [RecipeController],

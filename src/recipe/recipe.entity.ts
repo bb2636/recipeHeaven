@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/auth/user.entity';
+import { Category } from 'src/category/category.entity';
 import { Review } from 'src/review/review.entity';
-import { Sub } from 'src/sub-category/sub-category.entity';
 import {
   BaseEntity,
   Column,
@@ -51,12 +51,14 @@ export class Recipe extends BaseEntity {
   @Column('json')
   step: { stepNum: number; des: string; imgUrl: string }[];
 
-  @ManyToOne((type) => User, (user) => user.recipes, { eager: false })
+  @ManyToOne(() => User, (user) => user.recipes, { eager: false })
   user: User;
 
-  @OneToMany((type) => Review, (review) => review.recipe, { eager: true })
+  @OneToMany(() => Review, (review) => review.recipe, { eager: true })
   reviews: Review[];
 
-  @ManyToOne((type) => Sub, (sub) => sub.recipes, { eager: false })
-  sub: Sub;
+  @ManyToOne(() => Category, (category) => category.recipes, {
+    eager: false,
+  })
+  category: Category;
 }

@@ -3,7 +3,6 @@ import { Recipe } from './recipe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { User } from 'src/auth/user.entity';
-import { Sub } from 'src/sub-category/sub-category.entity';
 
 export class RecipeRepository extends Repository<Recipe> {
   constructor(@InjectRepository(Recipe) private dataSource: DataSource) {
@@ -12,7 +11,6 @@ export class RecipeRepository extends Repository<Recipe> {
   async createRecipe(
     createRecipeDto: CreateRecipeDto,
     user: User,
-    sub: Sub,
   ): Promise<Recipe> {
     const { recipeName, img, portion, leadTime, level, ingredient, step } =
       createRecipeDto;
@@ -26,7 +24,6 @@ export class RecipeRepository extends Repository<Recipe> {
       ingredient,
       step,
       user,
-      sub, //카테고리
     });
 
     await this.save(recipe);
