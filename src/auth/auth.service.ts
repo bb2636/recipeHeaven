@@ -27,19 +27,32 @@ export class AuthService {
     const kakaoTokenUrl = 'https://kauth.kakao.com/oauth/token';
     // const kakaoUserInfoUrl = 'https://kapi.kakao.com/v2/user/me';
 
-    const body = {
-      grant_type: 'authorization_code',
-      client_id: kakaoKey,
-      redirect_uri: `http://localhost:5173/oauth`,
-      code,
-    };
+    // const body = {
+    //   grant_type: 'authorization_code',
+    //   client_id: kakaoKey,
+    //   redirect_uri: `http://localhost:5173/oauth`,
+    //   code,
+    // };
     // const headers = {
     //   'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     // };
 
-    console.log(body);
+    // console.log(body);
 
     try {
+      const authorize = await axios.get(
+        'https://kauth.kakao.com/oauth/authorize',
+        {
+          params: {
+            client_id: 'f0f5c0502b3bb5ec7080c7b64a6d18ce',
+            redirect_uri: 'http://localhost:5173/oauth',
+            response_type: code,
+          },
+        },
+      );
+
+      // console.log('authorize', authorize);
+
       const response = await axios.post(
         'https://kauth.kakao.com/oauth/token',
         {
@@ -58,23 +71,57 @@ export class AuthService {
       console.log(response);
 
       if (response.status === 200) {
-        console.log(`kakaoToken : ${JSON.stringify(response.data)}`);
+        // console.log(`kakaoToken : ${JSON.stringify(response.data)}`);
 
         const headerUserInfo = {
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
           Authorization: 'Bearer' + response.data.accessToken,
         };
-        console.log(`url : ${kakaoTokenUrl}`);
-        console.log(`headers : ${JSON.stringify(headerUserInfo)}`);
+        // console.log(`url : ${kakaoTokenUrl}`);
+        // console.log(`headers : ${JSON.stringify(headerUserInfo)}`);
 
         const kakaoUserInfo = await axios.get(
           'https://kapi.kakao.com/v2/user/me',
           {
             headers: {
               Authorization: `Bearer ${response.data.access_token}`,
+              'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
             },
           },
         );
+        // console.log('kakaoUserInfo', kakaoUserInfo);
+        const userData = {
+          // Id: user.data.id,
+          nickname: kakaoUserInfo.data.kakao_account.profile.nickname,
+          email: kakaoUserInfo.data.kakao_account.email,
+          profilePicture: kakaoUserInfo.data.properties.profile_image,
+          // password: user.data.kakao_account.password,
+        };
+
+        // console.log(userData);
+
+        // const checkUser = await User.findOneBy({
+        //   where: { email: kakaoUserInfo.data.kakao_account.email },
+        // });
+        // console.log('checkUser', checkUser);
+
+        let createUserResult;
+
+        // if (!checkUser) {
+        //   const signUpUser = await this.userRepository.createUser({
+        //     // Id: userData.Id,
+        //     nickname: userData.nickname,
+        //     email: userData.email,
+        //     profilePicture: userData.profilePicture,
+        //     // password: userData.password,
+        //   });
+        //   createUserResult = signUpUser;
+        // } else {
+        //   checkUser = await User.findOneBy({
+        //     where: { email: kakaoUserInfo.data.kakao_account.email },
+        //   });
+        // }
+
         console.log(`responseUserInfo.status : ${kakaoUserInfo.status}`);
         if (kakaoUserInfo.status === 200) {
           console.log(`kakaoUserInfo : ${JSON.stringify(kakaoUserInfo.data)}`);
@@ -89,6 +136,38 @@ export class AuthService {
       console.log(e);
       throw new UnauthorizedException();
     }
+  }
+
+  async kakaoLogout(param: { code: string; domain: string }): Promise<any> {
+    const { code, domain } = param;
+    const kakaoKey = 'f0f5c0502b3bb5ec7080c7b64a6d18ce';
+    const kakaoLogoutUrl = 'https://kauth.kakao.com/oauth/logout';
+
+    // const response = await axios.post(
+    //   'https://kauth.kakao.com/oauth/token',
+    //   {
+    //     grant_type: 'authorization_code',
+    //     client_id: kakaoKey,
+    //     redirect_uri: `http://localhost:5173/oauth`,
+    //     code,
+    //   },
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    //     },
+    //   },
+    // );
+
+    // console.log('response', response);
+
+    const logoutResponse = await axios.get(kakaoLogoutUrl, {
+      params: {
+        client_id: kakaoKey,
+        logout_redirect_uri: 'http://localhost:5173',
+      },
+    });
+
+    console.log('logoutResponse', logoutResponse);
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
@@ -177,7 +256,7 @@ export class AuthService {
     // console.log('user', user);
 
     const userData = {
-      Id: user.data.id,
+      // Id: user.data.id,
       nickname: user.data.kakao_account.profile.nickname,
       email: user.data.kakao_account.email,
       profilePicture: user.data.properties.profile_image,
@@ -187,7 +266,7 @@ export class AuthService {
     // console.log(userData);
 
     const checkUser = await this.getUserByEmail(userData.email);
-    // console.log('checkUser', checkUser);
+    console.log('checkUser', checkUser);
 
     const signUpUser = await this.userRepository.createUser({
       // Id: userData.Id,

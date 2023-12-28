@@ -12,14 +12,15 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
-import { Recipe } from './recipe.entity';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
 // import { Sub } from 'src/sub-category/sub-category.entity';
 import { DeleteRecipeDto } from './dto/delete-recipe.dto';
+import { Recipe } from './recipe.entity';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('recipes')
 // @UseGuards(AuthGuard())

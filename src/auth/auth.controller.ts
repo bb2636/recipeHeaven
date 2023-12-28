@@ -14,11 +14,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user-decorator';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
+// import { AuthGuard } from './auth.guard';
 // import { AuthCredentialsDto } from './dto/auth-credential.dto';
 // import { AuthGuard } from '@nestjs/passport';
 
@@ -36,6 +36,7 @@ export class AuthController {
       }
       const kakao = await this.authService.kakaoLogin({ code, domain });
 
+      console.log(kakao);
       if (!kakao.id) {
         throw new BadRequestException('카카오 정보가 없습니다.');
       }
@@ -57,9 +58,7 @@ export class AuthController {
   }
 
   @Post('/signin')
-  signin(
-    @Body(ValidationPipe) authLoginDto: AuthLoginDto,
-  ): Promise<{ accessToken: string }> {
+  signin(@Body(ValidationPipe) authLoginDto: AuthLoginDto) {
     return this.authService.signIn(authLoginDto);
   }
 
@@ -74,6 +73,15 @@ export class AuthController {
     @Body('nickname') nickname: string,
   ) {
     return this.authService.updateUser(userId, nickname);
+  }
+
+  @Get('/logout/kakao')
+  async logout(@Body() body: any, @Response() res) {
+    const { code, domain } = body;
+
+    const logoutKakao = await this.authService.kakaoLogout({ code, domain });
+
+    console.log('logoutKakao', logoutKakao);
   }
 
   // @Post('/login/kko')
@@ -99,9 +107,9 @@ export class AuthController {
   //   }
   // }
 
-  @Post('/authTest')
-  @UseGuards(AuthGuard())
-  authTest(@GetUser() user: User) {
-    console.log('user', user);
-  }
+  // @Post('/authTest')
+  // @UseGuards(AuthGuard)
+  // authTest(@GetUser() user: User) {
+  //   console.log('user', user);
+  // }
 }

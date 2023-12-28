@@ -21,9 +21,9 @@ export class RecipeService {
   }
   async createRecipe(
     createRecipeDto: CreateRecipeDto,
-    user: User,
+    email: User,
   ): Promise<Recipe> {
-    return this.recipeRepository.createRecipe(createRecipeDto, user);
+    return this.recipeRepository.createRecipe(createRecipeDto, email);
   }
   async getRecipeById(recipeId: number): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneBy({ recipeId });

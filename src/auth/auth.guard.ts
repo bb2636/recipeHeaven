@@ -1,111 +1,107 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  Logger,
-  NotFoundException,
-  NotImplementedException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { AccountOneReader } from './read/account-one.reader';
-import { AccountReader, AccountUpdater } from './operator/account.operator';
-import { AccountLastestUpdater } from './update/account-latest.updater';
-import { JwtVerifier } from './jwt/jwt.verifier';
-import { JwtOperater } from './jwt/jwt.operator';
-import * as cache from 'memory-cache';
-import { TokenInformation } from './jwt/dto/token-information.dto';
-import moment from 'moment-timezone';
-import { Observable } from 'rxjs';
+// import {
+//   CanActivate,
+//   ExecutionContext,
+//   Injectable,
+//   Logger,
+//   NotFoundException,
+//   NotImplementedException,
+//   UnauthorizedException,
+// } from '@nestjs/common';
+// import { AccountOneReader } from './read/account-one.reader';
+// import { AccountReader, AccountUpdater } from './operator/account.operator';
+// import { AccountLastestUpdater } from './update/account-latest.updater';
+// import { JwtVerifier } from './jwt/jwt.verifier';
+// import { JwtOperater } from './jwt/jwt.operator';
+// import * as cache from 'memory-cache';
+// import { TokenInformation } from './jwt/dto/token-information.dto';
+// import moment from 'moment-timezone';
+// import { Observable } from 'rxjs';
 
-@Injectable()
-export class AuthGuard implements CanActivate {
-  private static readonly logger = new Logger(AuthGuard.name);
+// @Injectable()
+// export class AuthGuard implements CanActivate {
+//   private static readonly logger = new Logger(AuthGuard.name);
 
-  constructor(
-    private readonly accountOneReader: AccountOneReader,
-    private accountReader: AccountReader,
-    private readonly accountLatestUpdater: AccountLastestUpdater,
-    private accountUpdater: AccountUpdater,
+//   constructor() // private accountUpdater: AccountUpdater, // private readonly accountLatestUpdater: AccountLastestUpdater, // private accountReader: AccountReader, // private readonly accountOneReader: AccountOneReader,
 
-    private readonly jwtVerifier: JwtVerifier,
-    private jwtOperator: JwtOperater,
-  ) {}
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
-    throw new Error('Method not implemented.');
-  }
+//   // private readonly jwtVerifier: JwtVerifier,
+//   // private jwtOperator: JwtOperater,
+//   {}
+//   canActivate(
+//     context: ExecutionContext,
+//   ): boolean | Promise<boolean> | Observable<boolean> {
+//     throw new Error('Method not implemented.');
+//   }
 
-  async canActive(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const authorization = request.headers.authorization;
+//   async canActive(context: ExecutionContext): Promise<boolean> {
+//     const request = context.switchToHttp().getRequest();
+//     const authorization = request.headers.authorization;
 
-    AuthGuard.logger.log(`authorization: ${authorization}`);
+//     AuthGuard.logger.log(`authorization: ${authorization}`);
 
-    if (!authorization) {
-      throw new UnauthorizedException({
-        status: 401,
-        message: '인증되지 않았습니다.',
-      });
-    }
+//     if (!authorization) {
+//       throw new UnauthorizedException({
+//         status: 401,
+//         message: '인증되지 않았습니다.',
+//       });
+//     }
 
-    const [scheme, accessToken] = authorization.split(' ');
-    AuthGuard.logger.log(`Scheme: ${scheme}, AccessToken: ${accessToken}`);
+//     const [scheme, accessToken] = authorization.split(' ');
+//     AuthGuard.logger.log(`Scheme: ${scheme}, AccessToken: ${accessToken}`);
 
-    if (scheme.toLowerCase() !== `bearer`) {
-      throw new NotImplementedException({
-        status: 501,
-        message: '지원되지 않는 인증 토큰 유형입니다.',
-      });
-    }
+//     if (scheme.toLowerCase() !== `bearer`) {
+//       throw new NotImplementedException({
+//         status: 501,
+//         message: '지원되지 않는 인증 토큰 유형입니다.',
+//       });
+//     }
 
-    const memoryToken = cache.get(accessToken);
+//     const memoryToken = cache.get(accessToken);
 
-    if (!memoryToken) {
-      throw new UnauthorizedException({
-        status: 401,
-        message: '최근 발급된 토큰과 같지 않습니다.',
-      });
-    }
+//     if (!memoryToken) {
+//       throw new UnauthorizedException({
+//         status: 401,
+//         message: '최근 발급된 토큰과 같지 않습니다.',
+//       });
+//     }
 
-    this.jwtOperator.setOperator(this.jwtVerifier);
-    const adminInformation = new TokenInformation(
-      await this.jwtOperator.operate(accessToken),
-    );
+//     // this.jwtOperator.setOperator(this.jwtVerifier);
+//     // const adminInformation = new TokenInformation(
+//     //   await this.jwtOperator.operate(accessToken),
+//     // );
 
-    if (memoryToken !== adminInformation.adminId) {
-      throw new UnauthorizedException({
-        status: 401,
-        message: '최근 발급된 토큰의 ID와 같지 않습니다.',
-      });
-    }
+//     // if (memoryToken !== adminInformation.adminId) {
+//     //   throw new UnauthorizedException({
+//     //     status: 401,
+//     //     message: '최근 발급된 토큰의 ID와 같지 않습니다.',
+//     //   });
+//     // }
 
-    request.adminId = { id: adminInformation.adminId };
-    const exp = adminInformation.expiresIn;
+//     // request.adminId = { id: adminInformation.adminId };
+//     // const exp = adminInformation.expiresIn;
 
-    if (moment(exp).isBefore(moment())) {
-      cache.del(adminInformation.adminId);
-      throw new UnauthorizedException({
-        status: 401,
-        message: '인증토큰이 만료 되었습니다.',
-      });
-    }
+//     // if (moment(exp).isBefore(moment())) {
+//     //   cache.del(adminInformation.adminId);
+//     //   throw new UnauthorizedException({
+//     //     status: 401,
+//     //     message: '인증토큰이 만료 되었습니다.',
+//     //   });
+//     // }
 
-    this.accountReader.setOperator(this.accountOneReader);
-    const result = await this.accountReader.read({ id: request.adminId.id });
+//     // this.accountReader.setOperator(this.accountOneReader);
+//     // const result = await this.accountReader.read({ id: request.adminId.id });
 
-    if (!result) {
-      cache.del(adminInformation.adminId);
-      throw new NotFoundException({
-        status: 404,
-        message: '해당 토큰의 어드민이 DB에 존재하지 않습니다.',
-      });
-    }
+//     // if (!result) {
+//     //   cache.del(adminInformation.adminId);
+//     //   throw new NotFoundException({
+//     //     status: 404,
+//     //     message: '해당 토큰의 어드민이 DB에 존재하지 않습니다.',
+//     //   });
+//     // }
 
-    this.accountUpdater.setOperator(this.accountLatestUpdater);
-    await this.accountUpdater.update(request.clientIp, result.id);
-    request.admin = result;
+//     // this.accountUpdater.setOperator(this.accountLatestUpdater);
+//     // await this.accountUpdater.update(request.clientIp, result.id);
+//     // request.admin = result;
 
-    return true;
-  }
-}
+//     return true;
+//   }
+// }
