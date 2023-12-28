@@ -51,13 +51,13 @@ export class Recipe extends BaseEntity {
   @Column('json')
   step: { stepNum: number; des: string; imgUrl: string }[];
 
-  @ManyToOne((type) => User, (user) => user.recipes, { eager: false })
+  @ManyToOne(() => User, (user) => user.recipes, { eager: false })
   user: User;
 
-  @OneToMany((type) => Review, (review) => review.recipe, { eager: true })
+  @OneToMany(() => Review, (review) => review.recipe, { eager: true })
   reviews: Review[];
 
-  @ManyToOne((type) => Category, (category) => category.recipes, {
+  @ManyToOne(() => Category, (category) => category.recipes, {
     eager: false,
   })
   category: Category;
