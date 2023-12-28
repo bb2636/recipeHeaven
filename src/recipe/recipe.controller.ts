@@ -19,6 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
 import { Sub } from 'src/sub-category/sub-category.entity';
+import { DeleteRecipeDto } from './dto/delete-recipe.dto';
 
 @Controller('recipes')
 @UseGuards(AuthGuard())
@@ -54,6 +55,7 @@ export class RecipeController {
   deleteRecipe(
     @Param('recipeId', ParseIntPipe) recipeId,
     @GetUser() user: User,
+    @Body() deleteRecipeDto: DeleteRecipeDto,
   ): Promise<void> {
     return this.recipeService.deleteRecipe(recipeId);
   }
