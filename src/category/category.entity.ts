@@ -15,6 +15,6 @@ export class Category extends BaseEntity {
   @Column()
   categoryName: string; //재료별_소고기
 
-  @OneToMany((type) => Recipe, (recipe) => recipe.category, { eager: true })
+  @OneToMany(() => Recipe, (recipe) => recipe.category, { eager: true })
   recipes: Recipe[];
 }

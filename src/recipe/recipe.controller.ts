@@ -20,7 +20,7 @@ import { GetUser } from 'src/auth/get-user-decorator';
 import { User } from 'src/auth/user.entity';
 
 @Controller('recipes')
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 export class RecipeController {
   constructor(private recipeService: RecipeService) {}
   //전체조회
