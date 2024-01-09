@@ -6,15 +6,18 @@ import { Recipe } from './recipe.entity';
 import { AuthModule } from 'src/auth/auth.module';
 import { RecipeRepository } from './recipe.repository';
 import { PassportModule } from '@nestjs/passport';
+import { UserRepository } from 'src/auth/user.repository';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Recipe]),
+    TypeOrmModule.forFeature([Recipe, UserRepository]),
     AuthModule,
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    // PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [RecipeController],
-  providers: [RecipeService, RecipeRepository],
+  providers: [RecipeService, RecipeRepository, AuthService, JwtService],
   exports: [RecipeRepository],
 })
 export class RecipeModule {}

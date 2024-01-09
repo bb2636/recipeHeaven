@@ -18,6 +18,8 @@ import { GetUser } from './get-user-decorator';
 import { User } from './user.entity';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
+import { SigninAccountRequestDto } from './dto/auth-fixedlogin.dto';
+import { AuthGuard } from '@nestjs/passport';
 // import { AuthGuard } from './auth.guard';
 // import { AuthCredentialsDto } from './dto/auth-credential.dto';
 // import { AuthGuard } from '@nestjs/passport';
@@ -26,39 +28,39 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('/login/kakao')
-  async auth(@Body() body: any, @Response() res): Promise<any> {
-    try {
-      const { code, domain } = body;
+  // @Post('/login/kakao')
+  // async auth(@Body() body: any, @Response() res): Promise<any> {
+  //   try {
+  //     const { code, domain } = body;
 
-      if (!code || !domain) {
-        throw new BadRequestException('카카오 정보가 없습니다.');
-      }
-      const kakao = await this.authService.kakaoLogin({ code, domain });
+  //     if (!code || !domain) {
+  //       throw new BadRequestException('카카오 정보가 없습니다.');
+  //     }
+  //     const kakao = await this.authService.kakaoLogin({ code, domain });
 
-      console.log(kakao);
-      if (!kakao.id) {
-        throw new BadRequestException('카카오 정보가 없습니다.');
-      }
+  //     console.log(kakao);
+  //     if (!kakao.id) {
+  //       throw new BadRequestException('카카오 정보가 없습니다.');
+  //     }
 
-      res.send({
-        user: kakao,
-        message: 'success',
-      });
-    } catch (e) {
-      throw new UnauthorizedException();
-    }
-  }
+  //     res.send({
+  //       user: kakao,
+  //       message: 'success',
+  //     });
+  //   } catch (e) {
+  //     throw new UnauthorizedException();
+  //   }
+  // }
 
   @Post('/signup')
-  signUp(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
-  ): Promise<void> {
-    return this.authService.signUp(authCredentialsDto);
+  signUp(@Body(ValidationPipe) authLoginDto: AuthLoginDto): Promise<void> {
+    return this.authService.signUp(authLoginDto);
   }
 
   @Post('/signin')
-  signin(@Body(ValidationPipe) authLoginDto: AuthLoginDto) {
+  signIn(
+    @Body(ValidationPipe) authLoginDto: AuthLoginDto,
+  ): Promise<{ accessToken: string }> {
     return this.authService.signIn(authLoginDto);
   }
 
@@ -112,4 +114,10 @@ export class AuthController {
   // authTest(@GetUser() user: User) {
   //   console.log('user', user);
   // }
+
+  @Post('/test')
+  @UseGuards(AuthGuard())
+  test(@Req() req) {
+    console.log('req', req);
+  }
 }

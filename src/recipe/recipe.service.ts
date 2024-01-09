@@ -14,16 +14,19 @@ export class RecipeService {
     return this.recipeRepository.find();
   }
   async getUserAllRecipe(user: User): Promise<Recipe[]> {
-    const query = this.recipeRepository.createQueryBuilder('recipe');
-    query.where('recipe.userId = : userId', { userId: user.Id });
-    const recipes = await query.getMany();
-    return recipes;
+    return await this.recipeRepository
+      .createQueryBuilder('recipe')
+      .leftJoin('recipe.reviews', 'reviews')
+      .leftJoin('recipe.category', 'category')
+      .where('recipe.userId = : userId', { userId: user.Id })
+      .getMany();
   }
+
   async createRecipe(
     createRecipeDto: CreateRecipeDto,
-    email: User,
+    user: User,
   ): Promise<Recipe> {
-    return this.recipeRepository.createRecipe(createRecipeDto, email);
+    return this.recipeRepository.createRecipe(createRecipeDto, user);
   }
   async getRecipeById(recipeId: number): Promise<Recipe> {
     const recipe = await this.recipeRepository.findOneBy({ recipeId });

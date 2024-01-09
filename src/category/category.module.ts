@@ -9,7 +9,7 @@ import { CategoryRepository } from './category.repository';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Category]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    // PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [CategoryController],
   providers: [CategoryService, CategoryRepository],

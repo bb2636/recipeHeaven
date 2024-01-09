@@ -7,34 +7,27 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { AuthLoginDto } from './dto/auth-login.dto';
 
 export class UserRepository extends Repository<User> {
   constructor(@InjectRepository(User) private dataSource: DataSource) {
     super(User, dataSource.manager);
   }
 
-  async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    console.log('엔터');
-    const { email, nickname, profilePicture } = authCredentialsDto;
+  async createUser(authLoginDto: AuthLoginDto): Promise<User> {
+    const { email, password } = authLoginDto;
 
     const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(email, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = this.create({
       email,
-      nickname,
-      // password: hashedPassword,
-      profilePicture,
+      password: hashedPassword,
     });
 
-    console.log('user1', user);
     try {
-      console.log('user22', user);
-
       return await this.save(user);
     } catch (error) {
-      console.log('user333', user);
-
       if (error.code === 'ER_DUP_ENTRY') {
         throw new ConflictException('Duplicate error');
       } else {

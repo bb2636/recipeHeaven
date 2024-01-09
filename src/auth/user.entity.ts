@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from '@nestjs/common';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Recipe } from 'src/recipe/recipe.entity';
 import { Review } from 'src/review/review.entity';
@@ -30,8 +31,8 @@ export class User extends BaseEntity {
   @Column()
   profilePicture: string;
 
-  // @Column()
-  // password: string;
+  @Column()
+  password: string;
 
   @Column({
     type: 'enum',

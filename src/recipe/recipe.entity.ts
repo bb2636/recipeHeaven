@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -57,6 +58,7 @@ export class Recipe extends BaseEntity {
   @OneToMany(() => Review, (review) => review.recipe, { eager: true })
   reviews: Review[];
 
+  @JoinColumn()
   @ManyToOne(() => Category, (category) => category.recipes, {
     eager: false,
   })

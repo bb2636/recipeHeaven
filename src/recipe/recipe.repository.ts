@@ -10,7 +10,7 @@ export class RecipeRepository extends Repository<Recipe> {
   }
   async createRecipe(
     createRecipeDto: CreateRecipeDto,
-    email: User,
+    user: User,
   ): Promise<Recipe> {
     const { recipeName, img, portion, leadTime, level, ingredient, step } =
       createRecipeDto;
@@ -23,6 +23,7 @@ export class RecipeRepository extends Repository<Recipe> {
       level,
       ingredient,
       step,
+      user,
     });
 
     await this.save(recipe);
